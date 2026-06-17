@@ -1,3 +1,4 @@
+import { useRef, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -19,10 +20,11 @@ const ingredientSchema = z.object({
   ingredientId: z.string(),
   name: z.string().min(1, "Required"),
   defaultGrams: z.number({ invalid_type_error: "Required" }).positive("Must be > 0"),
-  caloriesPer100g: z.number({ invalid_type_error: "Required" }).nonnegative(),
-  proteinPer100g: z.number({ invalid_type_error: "Required" }).nonnegative(),
-  fatPer100g: z.number({ invalid_type_error: "Required" }).nonnegative(),
-  carbsPer100g: z.number({ invalid_type_error: "Required" }).nonnegative(),
+  // These represent macros FOR the default grams, not per 100g
+  calories: z.number({ invalid_type_error: "Required" }).nonnegative(),
+  protein: z.number({ invalid_type_error: "Required" }).nonnegative(),
+  fat: z.number({ invalid_type_error: "Required" }).nonnegative(),
+  carbs: z.number({ invalid_type_error: "Required" }).nonnegative(),
 });
 
 const schema = z.object({
@@ -36,20 +38,31 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
+function round1(n: number) {
+  return Math.round(n * 10) / 10;
+}
+
 function sumIngredients(ingredients: FormData["ingredients"]) {
   return ingredients.reduce(
-    (acc, ing) => {
-      const g = isNaN(ing.defaultGrams) || ing.defaultGrams <= 0 ? 0 : ing.defaultGrams;
-      const f = g / 100;
-      return {
-        calories: acc.calories + (isNaN(ing.caloriesPer100g) ? 0 : ing.caloriesPer100g) * f,
-        protein: acc.protein + (isNaN(ing.proteinPer100g) ? 0 : ing.proteinPer100g) * f,
-        fat: acc.fat + (isNaN(ing.fatPer100g) ? 0 : ing.fatPer100g) * f,
-        carbs: acc.carbs + (isNaN(ing.carbsPer100g) ? 0 : ing.carbsPer100g) * f,
-      };
-    },
+    (acc, ing) => ({
+      calories: acc.calories + (isNaN(ing.calories) ? 0 : ing.calories),
+      protein: acc.protein + (isNaN(ing.protein) ? 0 : ing.protein),
+      fat: acc.fat + (isNaN(ing.fat) ? 0 : ing.fat),
+      carbs: acc.carbs + (isNaN(ing.carbs) ? 0 : ing.carbs),
+    }),
     { calories: 0, protein: 0, fat: 0, carbs: 0 }
   );
+}
+
+// Convert stored per-100g values → values for the given default grams
+function fromPer100g(per100g: number, defaultGrams: number) {
+  return round1((per100g * defaultGrams) / 100);
+}
+
+// Convert form values (for default grams) → per-100g for storage
+function toPer100g(value: number, defaultGrams: number) {
+  if (!defaultGrams || defaultGrams <= 0) return 0;
+  return (value / defaultGrams) * 100;
 }
 
 interface MealFormProps {
@@ -65,6 +78,7 @@ export default function MealForm({ open, onOpenChange, initial, onSave }: MealFo
     handleSubmit,
     reset,
     watch,
+    setValue,
     control,
     formState: { errors },
   } = useForm<FormData>({
@@ -75,7 +89,15 @@ export default function MealForm({ open, onOpenChange, initial, onSave }: MealFo
       protein: initial?.protein ?? 0,
       fat: initial?.fat ?? 0,
       carbs: initial?.carbs ?? 0,
-      ingredients: initial?.ingredients ?? [],
+      ingredients: initial?.ingredients?.map((ing) => ({
+        ingredientId: ing.ingredientId,
+        name: ing.name,
+        defaultGrams: ing.defaultGrams,
+        calories: fromPer100g(ing.caloriesPer100g, ing.defaultGrams),
+        protein: fromPer100g(ing.proteinPer100g, ing.defaultGrams),
+        fat: fromPer100g(ing.fatPer100g, ing.defaultGrams),
+        carbs: fromPer100g(ing.carbsPer100g, ing.defaultGrams),
+      })) ?? [],
     },
   });
 
@@ -84,19 +106,56 @@ export default function MealForm({ open, onOpenChange, initial, onSave }: MealFo
   const hasIngredients = fields.length > 0;
   const computed = hasIngredients ? sumIngredients(watchedIngredients) : null;
 
+  // Auto-scale macro inputs when defaultGrams changes
+  const prevGramsRef = useRef<string>("");
+  const gramsStr = JSON.stringify(watchedIngredients.map((i) => i.defaultGrams));
+  useEffect(() => {
+    if (!prevGramsRef.current) {
+      prevGramsRef.current = gramsStr;
+      return;
+    }
+    const prev: number[] = JSON.parse(prevGramsRef.current);
+    watchedIngredients.forEach((ing, i) => {
+      const oldG = prev[i];
+      const newG = isNaN(ing.defaultGrams) ? 0 : ing.defaultGrams;
+      if (oldG !== undefined && oldG > 0 && newG > 0 && oldG !== newG) {
+        const scale = newG / oldG;
+        setValue(`ingredients.${i}.calories`, round1((isNaN(ing.calories) ? 0 : ing.calories) * scale));
+        setValue(`ingredients.${i}.protein`, round1((isNaN(ing.protein) ? 0 : ing.protein) * scale));
+        setValue(`ingredients.${i}.fat`, round1((isNaN(ing.fat) ? 0 : ing.fat) * scale));
+        setValue(`ingredients.${i}.carbs`, round1((isNaN(ing.carbs) ? 0 : ing.carbs) * scale));
+      }
+    });
+    prevGramsRef.current = gramsStr;
+  }, [gramsStr]);
+
   function onSubmit(data: FormData) {
+    const ingredientsForStorage = data.ingredients.map((ing) => ({
+      ingredientId: ing.ingredientId,
+      name: ing.name,
+      defaultGrams: ing.defaultGrams,
+      caloriesPer100g: toPer100g(isNaN(ing.calories) ? 0 : ing.calories, ing.defaultGrams),
+      proteinPer100g: toPer100g(isNaN(ing.protein) ? 0 : ing.protein, ing.defaultGrams),
+      fatPer100g: toPer100g(isNaN(ing.fat) ? 0 : ing.fat, ing.defaultGrams),
+      carbsPer100g: toPer100g(isNaN(ing.carbs) ? 0 : ing.carbs, ing.defaultGrams),
+    }));
+
     const macros =
       data.ingredients.length > 0
         ? sumIngredients(data.ingredients)
         : { calories: data.calories, protein: data.protein, fat: data.fat, carbs: data.carbs };
 
-    onSave({ name: data.name, ...macros, ingredients: data.ingredients });
+    onSave({ name: data.name, ...macros, ingredients: ingredientsForStorage });
     reset();
+    prevGramsRef.current = "";
     onOpenChange(false);
   }
 
   function handleClose(v: boolean) {
-    if (!v) reset();
+    if (!v) {
+      reset();
+      prevGramsRef.current = "";
+    }
     onOpenChange(v);
   }
 
@@ -122,17 +181,17 @@ export default function MealForm({ open, onOpenChange, initial, onSave }: MealFo
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() =>
+                onClick={() => {
                   append({
                     ingredientId: crypto.randomUUID(),
                     name: "",
                     defaultGrams: 100,
-                    caloriesPer100g: 0,
-                    proteinPer100g: 0,
-                    fatPer100g: 0,
-                    carbsPer100g: 0,
-                  })
-                }
+                    calories: 0,
+                    protein: 0,
+                    fat: 0,
+                    carbs: 0,
+                  });
+                }}
               >
                 <Plus className="h-3.5 w-3.5" />
                 Add ingredient
@@ -145,81 +204,86 @@ export default function MealForm({ open, onOpenChange, initial, onSave }: MealFo
               </p>
             )}
 
-            {fields.map((field, index) => (
-              <div key={field.id} className="border rounded-lg p-3 space-y-2">
-                <input type="hidden" {...register(`ingredients.${index}.ingredientId`)} />
-                <div className="flex gap-2 items-end">
-                  <div className="flex-1 space-y-1">
-                    <Label htmlFor={`ing-name-${index}`} className="text-xs">Name</Label>
-                    <Input
-                      id={`ing-name-${index}`}
-                      placeholder="e.g. Pasta"
-                      className="h-8 text-xs"
-                      {...register(`ingredients.${index}.name`)}
-                    />
-                    {errors.ingredients?.[index]?.name && (
-                      <p className="text-xs text-destructive">{errors.ingredients[index].name?.message}</p>
-                    )}
-                  </div>
-                  <div className="w-24 space-y-1">
-                    <Label htmlFor={`ing-grams-${index}`} className="text-xs">Default g</Label>
-                    <Input
-                      id={`ing-grams-${index}`}
-                      type="number"
-                      min={0}
-                      step={1}
-                      className="h-8 text-xs"
-                      {...register(`ingredients.${index}.defaultGrams`, { valueAsNumber: true })}
-                    />
-                  </div>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-destructive hover:text-destructive shrink-0"
-                    onClick={() => remove(index)}
-                    aria-label="Remove ingredient"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
-                <div className="grid grid-cols-4 gap-2">
-                  {(
-                    [
-                      { key: "caloriesPer100g", label: "kcal/100g" },
-                      { key: "proteinPer100g", label: "P /100g" },
-                      { key: "fatPer100g", label: "F /100g" },
-                      { key: "carbsPer100g", label: "C /100g" },
-                    ] as const
-                  ).map(({ key, label }) => (
-                    <div key={key} className="space-y-1">
-                      <Label htmlFor={`ing-${key}-${index}`} className="text-[10px] text-muted-foreground">
-                        {label}
-                      </Label>
+            {fields.map((field, index) => {
+              const grams = watchedIngredients[index]?.defaultGrams;
+              const gramsLabel = !isNaN(grams) && grams > 0 ? `${grams}g` : "…g";
+              return (
+                <div key={field.id} className="border rounded-lg p-3 space-y-2">
+                  <input type="hidden" {...register(`ingredients.${index}.ingredientId`)} />
+                  <div className="flex gap-2 items-end">
+                    <div className="flex-1 space-y-1">
+                      <Label htmlFor={`ing-name-${index}`} className="text-xs">Name</Label>
                       <Input
-                        id={`ing-${key}-${index}`}
+                        id={`ing-name-${index}`}
+                        placeholder="e.g. Milk"
+                        className="h-8 text-xs"
+                        {...register(`ingredients.${index}.name`)}
+                      />
+                      {errors.ingredients?.[index]?.name && (
+                        <p className="text-xs text-destructive">{errors.ingredients[index].name?.message}</p>
+                      )}
+                    </div>
+                    <div className="w-24 space-y-1">
+                      <Label htmlFor={`ing-grams-${index}`} className="text-xs">Default g/ml</Label>
+                      <Input
+                        id={`ing-grams-${index}`}
                         type="number"
                         min={0}
-                        step={0.1}
+                        step={1}
                         className="h-8 text-xs"
-                        {...register(`ingredients.${index}.${key}`, { valueAsNumber: true })}
+                        {...register(`ingredients.${index}.defaultGrams`, { valueAsNumber: true })}
                       />
                     </div>
-                  ))}
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-destructive hover:text-destructive shrink-0"
+                      onClick={() => remove(index)}
+                      aria-label="Remove ingredient"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground">Macros for {gramsLabel}</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {(
+                      [
+                        { key: "calories", label: "kcal" },
+                        { key: "protein", label: "protein g" },
+                        { key: "fat", label: "fat g" },
+                        { key: "carbs", label: "carbs g" },
+                      ] as const
+                    ).map(({ key, label }) => (
+                      <div key={key} className="space-y-1">
+                        <Label htmlFor={`ing-${key}-${index}`} className="text-[10px] text-muted-foreground">
+                          {label}
+                        </Label>
+                        <Input
+                          id={`ing-${key}-${index}`}
+                          type="number"
+                          min={0}
+                          step={0.1}
+                          className="h-8 text-xs"
+                          {...register(`ingredients.${index}.${key}`, { valueAsNumber: true })}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {hasIngredients && computed ? (
             <div className="rounded-md bg-muted p-3 space-y-1.5">
-              <p className="text-xs font-medium text-muted-foreground">Computed totals at default grams</p>
+              <p className="text-xs font-medium text-muted-foreground">Total at default amounts</p>
               <div className="grid grid-cols-4 gap-2 text-center">
                 {[
                   { label: "kcal", value: Math.round(computed.calories) },
-                  { label: "protein", value: `${Math.round(computed.protein * 10) / 10}g` },
-                  { label: "fat", value: `${Math.round(computed.fat * 10) / 10}g` },
-                  { label: "carbs", value: `${Math.round(computed.carbs * 10) / 10}g` },
+                  { label: "protein", value: `${round1(computed.protein)}g` },
+                  { label: "fat", value: `${round1(computed.fat)}g` },
+                  { label: "carbs", value: `${round1(computed.carbs)}g` },
                 ].map(({ label, value }) => (
                   <div key={label} className="bg-background rounded-md py-1.5">
                     <div className="text-xs font-semibold">{value}</div>
