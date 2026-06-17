@@ -18,11 +18,13 @@ export default function MealLibrary({ meals, onAdd, onUpdate, onDelete }: MealLi
   const [editing, setEditing] = useState<Meal | null>(null);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold">Meal Library</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">{meals.length} meal{meals.length !== 1 ? "s" : ""} saved</p>
+          <h1 className="text-4xl font-medium tracking-tight">Meal Library</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            {meals.length} meal{meals.length !== 1 ? "s" : ""} saved
+          </p>
         </div>
         <Button onClick={() => setAddOpen(true)}>
           <Plus className="h-4 w-4" />
@@ -31,10 +33,10 @@ export default function MealLibrary({ meals, onAdd, onUpdate, onDelete }: MealLi
       </div>
 
       {meals.length === 0 ? (
-        <div className="border border-dashed rounded-lg p-12 text-center">
-          <p className="text-muted-foreground text-sm">No meals yet.</p>
-          <p className="text-muted-foreground text-sm">Add your first meal to get started.</p>
-          <Button className="mt-4" onClick={() => setAddOpen(true)}>
+        <div className="border border-dashed border-border rounded-3xl p-16 text-center bg-surface-soft/50">
+          <p className="text-muted-foreground text-sm font-medium">No meals yet.</p>
+          <p className="text-muted-foreground text-sm mt-1">Add your first meal to get started.</p>
+          <Button className="mt-6" onClick={() => setAddOpen(true)}>
             <Plus className="h-4 w-4" />
             Add meal
           </Button>

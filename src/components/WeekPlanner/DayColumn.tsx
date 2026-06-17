@@ -21,10 +21,24 @@ export default function DayColumn({ date, dayPlan, goals, meals, onUpdateSlot }:
   const isToday = format(new Date(), "yyyy-MM-dd") === format(date, "yyyy-MM-dd");
 
   return (
-    <div className={`min-w-[150px] flex flex-col gap-2 p-2 rounded-lg border ${isToday ? "border-primary/40 bg-primary/5" : "border-border bg-card"}`}>
-      <div className="text-center pb-1 border-b">
-        <div className="text-[10px] text-muted-foreground uppercase tracking-wide">{format(date, "EEE")}</div>
-        <div className={`text-sm font-semibold ${isToday ? "text-primary" : ""}`}>{format(date, "d")}</div>
+    <div
+      className={`min-w-[150px] flex flex-col gap-2 p-3 rounded-2xl border ${
+        isToday
+          ? "border-brand-peach/60 bg-brand-peach/10"
+          : "border-border bg-background"
+      }`}
+    >
+      <div className="text-center pb-2 border-b border-border">
+        <div className="text-[10px] font-semibold tracking-[0.1em] uppercase text-muted-foreground">
+          {format(date, "EEE")}
+        </div>
+        <div
+          className={`text-base font-semibold tracking-tight ${
+            isToday ? "text-brand-ochre" : "text-foreground"
+          }`}
+        >
+          {format(date, "d")}
+        </div>
       </div>
 
       <div className="space-y-3 flex-1">

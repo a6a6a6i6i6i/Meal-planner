@@ -44,25 +44,25 @@ export default function MealSlot({ slot, entry, meals, onUpdate }: MealSlotProps
   const entryKcal = meal && entry ? Math.round(computeEntryMacros(meal, entry).calories) : 0;
 
   return (
-    <div className="space-y-1">
-      <div className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+    <div className="space-y-1.5">
+      <div className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
         {SLOT_LABELS[slot]}
       </div>
 
       {deleted ? (
-        <div className="flex items-center justify-between gap-1 text-xs text-destructive bg-destructive/10 rounded px-2 py-1">
+        <div className="flex items-center justify-between gap-1 text-xs text-destructive bg-destructive/10 rounded-lg px-2 py-1.5">
           <span>Meal deleted</span>
           <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => onUpdate(null)} aria-label="Clear slot">
             <X className="h-3 w-3" />
           </Button>
         </div>
       ) : meal ? (
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <div className="flex items-center gap-1">
-            <span className="text-xs font-medium truncate flex-1">{meal.name}</span>
+            <span className="text-xs font-semibold truncate flex-1 leading-snug">{meal.name}</span>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-5 w-5 shrink-0" onClick={() => onUpdate(null)} aria-label="Remove meal">
+                <Button variant="ghost" size="icon" className="h-5 w-5 shrink-0 text-muted-foreground" onClick={() => onUpdate(null)} aria-label="Remove meal">
                   <X className="h-3 w-3" />
                 </Button>
               </TooltipTrigger>
@@ -109,7 +109,7 @@ export default function MealSlot({ slot, entry, meals, onUpdate }: MealSlotProps
                 value={entry!.servings}
                 onChange={(e) => handleServingsChange(e.target.value)}
                 onBlur={(e) => handleServingsChange(e.target.value)}
-                className="w-14 h-6 text-xs border rounded px-1.5 bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+                className="w-14 h-7 text-xs border border-border rounded-md px-1.5 bg-background focus:outline-none focus:ring-1 focus:ring-ring"
                 aria-label="Servings"
               />
               <span className="text-[10px] text-muted-foreground">

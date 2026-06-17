@@ -2,7 +2,6 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { ChevronLeft, ChevronRight, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import GoalsDialog from "./GoalsDialog";
 import { getWeekDates } from "@/lib/weekKeys";
 import type { WeekGoals } from "@/types";
@@ -13,6 +12,15 @@ interface WeekHeaderProps {
   onPrevWeek: () => void;
   onNextWeek: () => void;
   onUpdateGoals: (goals: WeekGoals) => void;
+}
+
+function GoalPill({ dotColor, label }: { dotColor: string; label: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-card text-xs font-semibold text-foreground">
+      <span className="h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: dotColor }} />
+      {label}
+    </span>
+  );
 }
 
 export default function WeekHeader({ weekKey, goals, onPrevWeek, onNextWeek, onUpdateGoals }: WeekHeaderProps) {
@@ -26,14 +34,16 @@ export default function WeekHeader({ weekKey, goals, onPrevWeek, onNextWeek, onU
     : `${format(monday, "MMM d")} – ${format(sunday, "MMM d, yyyy")}`;
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 py-4 border-b mb-4">
-      <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center justify-between gap-4 py-5 border-b border-border mb-6">
+      <div className="flex items-center gap-3">
         <Button variant="outline" size="icon" onClick={onPrevWeek} aria-label="Previous week">
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <div className="text-center min-w-[160px]">
-          <div className="text-xs text-muted-foreground">{weekKey}</div>
-          <div className="font-semibold text-sm">{label}</div>
+        <div className="text-center min-w-[180px]">
+          <div className="text-[11px] font-semibold tracking-[0.1em] uppercase text-muted-foreground">
+            {weekKey}
+          </div>
+          <div className="text-xl font-medium tracking-tight">{label}</div>
         </div>
         <Button variant="outline" size="icon" onClick={onNextWeek} aria-label="Next week">
           <ChevronRight className="h-4 w-4" />
@@ -41,10 +51,10 @@ export default function WeekHeader({ weekKey, goals, onPrevWeek, onNextWeek, onU
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Badge variant="secondary">{goals.calories} kcal</Badge>
-        <Badge variant="secondary">{goals.protein}g protein</Badge>
-        <Badge variant="secondary">{goals.fat}g fat</Badge>
-        <Badge variant="secondary">{goals.carbs}g carbs</Badge>
+        <GoalPill dotColor="#e8b94a" label={`${goals.calories} kcal`} />
+        <GoalPill dotColor="#ff4d8b" label={`${goals.protein}g protein`} />
+        <GoalPill dotColor="#a4d4c5" label={`${goals.fat}g fat`} />
+        <GoalPill dotColor="#ffb084" label={`${goals.carbs}g carbs`} />
         <Button variant="outline" size="sm" onClick={() => setGoalsOpen(true)}>
           <Settings2 className="h-3.5 w-3.5" />
           Edit goals
