@@ -11,10 +11,10 @@ export default function DayTotals({ totals, goals }: DayTotalsProps) {
 
   return (
     <div className="mt-1 pt-2 border-t border-border space-y-1.5">
-      <div className="flex justify-between text-xs font-semibold">
-        <span className="text-muted-foreground">Total</span>
-        <span className={calOver ? "text-destructive" : "text-foreground"}>
-          {Math.round(totals.calories)} / {goals.calories} kcal
+      <div className="flex justify-between items-baseline">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Total</span>
+        <span className={`text-sm font-bold ${calOver ? "text-destructive" : "text-foreground"}`}>
+          {Math.round(totals.calories)}<span className="text-[10px] font-normal text-muted-foreground"> / {goals.calories}</span>
         </span>
       </div>
       <MacroBar label="Protein" actual={totals.protein} target={goals.protein} color="protein" />

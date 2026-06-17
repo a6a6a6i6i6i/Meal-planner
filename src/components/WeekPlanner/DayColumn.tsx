@@ -24,21 +24,21 @@ export default function DayColumn({ date, dayPlan, goals, meals, onUpdateSlot }:
     <div
       className={`min-w-[150px] flex flex-col gap-2 p-3 rounded-2xl border ${
         isToday
-          ? "border-brand-peach/60 bg-brand-peach/10"
+          ? "border-brand-peach/60 border-t-[3px] border-t-brand-ochre bg-brand-peach/10"
           : "border-border bg-background"
       }`}
     >
       <div className="text-center pb-2 border-b border-border">
-        <div className="text-[10px] font-semibold tracking-[0.1em] uppercase text-muted-foreground">
+        <div className="text-[10px] font-semibold tracking-[0.1em] uppercase text-muted-foreground mb-1">
           {format(date, "EEE")}
         </div>
-        <div
-          className={`text-base font-semibold tracking-tight ${
-            isToday ? "text-brand-ochre" : "text-foreground"
-          }`}
-        >
-          {format(date, "d")}
-        </div>
+        {isToday ? (
+          <div className="h-8 w-8 rounded-full bg-brand-ochre flex items-center justify-center mx-auto">
+            <span className="text-sm font-bold text-white">{format(date, "d")}</span>
+          </div>
+        ) : (
+          <div className="text-base font-semibold text-foreground">{format(date, "d")}</div>
+        )}
       </div>
 
       <div className="space-y-3 flex-1">
