@@ -71,14 +71,14 @@ export default function MealForm({ open, onOpenChange, initial, onSave }: MealFo
               {errors.protein && <p className="text-xs text-destructive">{errors.protein.message}</p>}
             </div>
             <div className="space-y-1">
-              <Label htmlFor="carbs">Carbs (g)</Label>
-              <Input id="carbs" type="number" min={0} step={0.1} {...register("carbs", { valueAsNumber: true })} />
-              {errors.carbs && <p className="text-xs text-destructive">{errors.carbs.message}</p>}
-            </div>
-            <div className="space-y-1">
               <Label htmlFor="fat">Fat (g)</Label>
               <Input id="fat" type="number" min={0} step={0.1} {...register("fat", { valueAsNumber: true })} />
               {errors.fat && <p className="text-xs text-destructive">{errors.fat.message}</p>}
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="carbs">Carbs (g)</Label>
+              <Input id="carbs" type="number" min={0} step={0.1} {...register("carbs", { valueAsNumber: true })} />
+              {errors.carbs && <p className="text-xs text-destructive">{errors.carbs.message}</p>}
             </div>
           </div>
           <DialogFooter>

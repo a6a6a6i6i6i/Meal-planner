@@ -18,8 +18,8 @@ export default function DayTotals({ totals, goals }: DayTotalsProps) {
         </span>
       </div>
       <MacroBar label="Protein" actual={totals.protein} target={goals.protein} color="blue" />
-      <MacroBar label="Carbs" actual={totals.carbs} target={goals.carbs} color="yellow" />
       <MacroBar label="Fat" actual={totals.fat} target={goals.fat} color="red" />
+      <MacroBar label="Carbs" actual={totals.carbs} target={goals.carbs} color="yellow" />
     </div>
   );
 }

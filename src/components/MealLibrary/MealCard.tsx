@@ -37,8 +37,8 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
         {[
           { label: "kcal", value: Math.round(meal.calories) },
           { label: "protein", value: `${meal.protein}g` },
-          { label: "carbs", value: `${meal.carbs}g` },
           { label: "fat", value: `${meal.fat}g` },
+          { label: "carbs", value: `${meal.carbs}g` },
         ].map(({ label, value }) => (
           <div key={label} className="bg-muted rounded-md py-1.5 px-1">
             <div className="text-xs font-semibold text-foreground">{value}</div>

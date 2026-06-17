@@ -43,8 +43,8 @@ export default function WeekHeader({ weekKey, goals, onPrevWeek, onNextWeek, onU
       <div className="flex flex-wrap items-center gap-2">
         <Badge variant="secondary">{goals.calories} kcal</Badge>
         <Badge variant="secondary">{goals.protein}g protein</Badge>
-        <Badge variant="secondary">{goals.carbs}g carbs</Badge>
         <Badge variant="secondary">{goals.fat}g fat</Badge>
+        <Badge variant="secondary">{goals.carbs}g carbs</Badge>
         <Button variant="outline" size="sm" onClick={() => setGoalsOpen(true)}>
           <Settings2 className="h-3.5 w-3.5" />
           Edit goals

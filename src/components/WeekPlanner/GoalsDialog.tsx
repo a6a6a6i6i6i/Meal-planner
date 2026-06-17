@@ -43,8 +43,8 @@ export default function GoalsDialog({ open, onOpenChange, goals, onSave }: Goals
   const fields: { id: keyof FormData; label: string; unit: string }[] = [
     { id: "calories", label: "Calories", unit: "kcal/day" },
     { id: "protein", label: "Protein", unit: "g/day" },
-    { id: "carbs", label: "Carbs", unit: "g/day" },
     { id: "fat", label: "Fat", unit: "g/day" },
+    { id: "carbs", label: "Carbs", unit: "g/day" },
   ];
 
   return (
