@@ -1,3 +1,18 @@
+export interface Ingredient {
+  ingredientId: string;
+  name: string;
+  defaultGrams: number;
+  caloriesPer100g: number;
+  proteinPer100g: number;
+  carbsPer100g: number;
+  fatPer100g: number;
+}
+
+export interface IngredientOverride {
+  ingredientId: string;
+  grams: number;
+}
+
 export interface Meal {
   id: string;
   name: string;
@@ -5,11 +20,13 @@ export interface Meal {
   protein: number;
   carbs: number;
   fat: number;
+  ingredients: Ingredient[];
 }
 
 export interface MealEntry {
   mealId: string;
   servings: number;
+  ingredientOverrides?: IngredientOverride[];
 }
 
 export interface DayPlan {

@@ -10,10 +10,21 @@ interface MealCardProps {
 }
 
 export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
+  const hasIngredients = meal.ingredients?.length > 0;
+
   return (
     <div className="border rounded-lg p-4 bg-card flex flex-col gap-3">
       <div className="flex items-start justify-between gap-2">
-        <h3 className="font-medium text-sm leading-tight">{meal.name}</h3>
+        <div className="min-w-0">
+          <h3 className="font-medium text-sm leading-tight">{meal.name}</h3>
+          {hasIngredients && (
+            <p className="text-[10px] text-muted-foreground mt-0.5">
+              {meal.ingredients.length} ingredient{meal.ingredients.length !== 1 ? "s" : ""}
+              {" · "}
+              {meal.ingredients.map((i) => `${i.name} ${i.defaultGrams}g`).join(", ")}
+            </p>
+          )}
+        </div>
         <div className="flex gap-1 shrink-0">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -25,7 +36,13 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" onClick={onDelete} aria-label="Delete meal">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 text-destructive hover:text-destructive"
+                onClick={onDelete}
+                aria-label="Delete meal"
+              >
                 <Trash2 className="h-3.5 w-3.5" />
               </Button>
             </TooltipTrigger>
