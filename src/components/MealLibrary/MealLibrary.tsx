@@ -21,7 +21,7 @@ export default function MealLibrary({ meals, onAdd, onUpdate, onDelete }: MealLi
     <div className="max-w-7xl mx-auto px-6 py-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-4xl font-medium tracking-tight">Meal Library</h1>
+          <h1 className="text-[52px] font-medium tracking-tight leading-none">Meal Library</h1>
           <p className="text-sm text-muted-foreground mt-1">
             {meals.length} meal{meals.length !== 1 ? "s" : ""} saved
           </p>

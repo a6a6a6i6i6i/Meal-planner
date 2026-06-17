@@ -34,7 +34,10 @@ export default function MealPicker({ meals, selectedId, onSelect }: MealPickerPr
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between text-left font-normal h-8 text-xs px-2"
+          className={cn(
+            "w-full justify-between text-left font-normal h-8 text-xs px-2",
+            !selected && "border-dashed text-muted-foreground"
+          )}
         >
           <span className="truncate">
             {selected ? selected.name : "Pick a meal…"}

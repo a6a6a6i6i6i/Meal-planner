@@ -38,7 +38,7 @@ export default function WeekPlanner({
       />
 
       <div className="overflow-x-auto pb-4">
-        <div className="grid grid-cols-7 gap-2 min-w-[1050px]">
+        <div className="grid grid-cols-7 gap-3 min-w-[1100px]">
           {dates.map((date) => {
             const dayKey = formatDayKey(date);
             const dayPlan = weekPlan.days[dayKey] ?? emptyDay;
