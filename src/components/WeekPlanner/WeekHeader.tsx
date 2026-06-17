@@ -43,7 +43,6 @@ export default function WeekHeader({ weekKey, goals, onPrevWeek, onNextWeek, onU
           <div className="text-[10px] font-semibold tracking-[0.15em] uppercase text-muted-foreground mb-0.5">
             {weekKey}
           </div>
-          <div className="text-[40px] font-medium tracking-tight leading-none">{label}</div>
         </div>
         <Button variant="outline" size="icon" onClick={onNextWeek} aria-label="Next week">
           <ChevronRight className="h-4 w-4" />
