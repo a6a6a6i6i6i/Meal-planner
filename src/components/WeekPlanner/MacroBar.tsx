@@ -2,13 +2,13 @@ interface MacroBarProps {
   label: string;
   actual: number;
   target: number;
-  color: "blue" | "yellow" | "red";
+  color: "protein" | "fat" | "carbs";
 }
 
-const colorMap = {
-  blue: "bg-blue-500",
-  yellow: "bg-yellow-400",
-  red: "bg-red-400",
+const colorMap: Record<MacroBarProps["color"], string> = {
+  protein: "bg-brand-pink",
+  fat:     "bg-brand-mint",
+  carbs:   "bg-brand-ochre",
 };
 
 export default function MacroBar({ label, actual, target, color }: MacroBarProps) {
@@ -23,7 +23,7 @@ export default function MacroBar({ label, actual, target, color }: MacroBarProps
           {Math.round(actual)}g / {target}g
         </span>
       </div>
-      <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+      <div className="h-1.5 w-full rounded-full bg-surface-card overflow-hidden">
         <div
           className={`h-full rounded-full transition-all ${over ? "bg-destructive" : colorMap[color]}`}
           style={{ width: `${pct}%` }}

@@ -51,12 +51,29 @@ export default {
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
-				}
+				},
+				/* Clay brand palette — supports opacity modifiers (bg-brand-pink/20 etc.) */
+				'brand-pink':     'hsl(var(--brand-pink) / <alpha-value>)',
+				'brand-teal':     'hsl(var(--brand-teal) / <alpha-value>)',
+				'brand-lavender': 'hsl(var(--brand-lavender) / <alpha-value>)',
+				'brand-peach':    'hsl(var(--brand-peach) / <alpha-value>)',
+				'brand-ochre':    'hsl(var(--brand-ochre) / <alpha-value>)',
+				'brand-mint':     'hsl(var(--brand-mint) / <alpha-value>)',
+				'brand-coral':    'hsl(var(--brand-coral) / <alpha-value>)',
+				/* Surface tokens */
+				'surface-soft':   'hsl(var(--surface-soft) / <alpha-value>)',
+				'surface-card':   'hsl(var(--surface-card) / <alpha-value>)',
+				'surface-strong': 'hsl(var(--surface-strong) / <alpha-value>)',
 			},
 			borderRadius: {
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				lg: 'var(--radius)',              /* 12px – buttons, inputs */
+				md: 'calc(var(--radius) - 2px)',  /* 10px */
+				sm: 'calc(var(--radius) - 4px)',  /* 8px  */
+				/* Tailwind built-ins still apply:
+				   rounded-xl  = 12px  (0.75rem)
+				   rounded-2xl = 16px  (1rem)    ← content cards
+				   rounded-3xl = 24px  (1.5rem)  ← feature cards
+				   rounded-full = 9999px          ← pill badges */
 			},
 			keyframes: {
 				'accordion-down': {
