@@ -75,7 +75,7 @@ export default function WeekHeader({ weekKey, goals, onPrevWeek, onNextWeek, onU
         </Button>
         <div className="text-center min-w-[240px]">
           <div className="text-[10px] font-semibold tracking-[0.15em] uppercase text-muted-foreground mb-0.5">
-            {weekKey}
+            Week {weekKey.split("-W")[1]}
           </div>
           <div className="text-sm font-medium text-foreground">{label}</div>
         </div>

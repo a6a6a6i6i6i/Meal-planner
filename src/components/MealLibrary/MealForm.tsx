@@ -163,12 +163,12 @@ export default function MealForm({ open, onOpenChange, initial, onSave }: MealFo
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{initial ? "Edit Meal" : "Add Meal"}</DialogTitle>
+          <DialogTitle>{initial ? "Edit meal" : "Add meal"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-1">
             <Label htmlFor="name">Meal name</Label>
-            <Input id="name" placeholder="e.g. Pasta with Ragù" {...register("name")} />
+            <Input id="name" placeholder="e.g. Pasta with Ragù" autoFocus {...register("name")} />
             {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
           </div>
 
@@ -200,7 +200,7 @@ export default function MealForm({ open, onOpenChange, initial, onSave }: MealFo
 
             {fields.length === 0 && (
               <p className="text-xs text-muted-foreground">
-                No ingredients — enter macros directly below, or add ingredients to compute them automatically.
+                No ingredients yet. Enter macros directly below, or add ingredients to calculate them.
               </p>
             )}
 
@@ -224,7 +224,7 @@ export default function MealForm({ open, onOpenChange, initial, onSave }: MealFo
                       )}
                     </div>
                     <div className="w-24 space-y-1">
-                      <Label htmlFor={`ing-grams-${index}`} className="text-xs">Default g/ml</Label>
+                      <Label htmlFor={`ing-grams-${index}`} className="text-xs">Amount (g/ml)</Label>
                       <Input
                         id={`ing-grams-${index}`}
                         type="number"
@@ -245,14 +245,14 @@ export default function MealForm({ open, onOpenChange, initial, onSave }: MealFo
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
                   </div>
-                  <p className="text-[10px] text-muted-foreground">Macros for {gramsLabel}</p>
+                  <p className="text-[10px] text-muted-foreground">Per {gramsLabel}</p>
                   <div className="grid grid-cols-4 gap-2">
                     {(
                       [
                         { key: "calories", label: "kcal" },
-                        { key: "protein", label: "protein g" },
-                        { key: "fat", label: "fat g" },
-                        { key: "carbs", label: "carbs g" },
+                        { key: "protein", label: "protein" },
+                        { key: "fat", label: "fat" },
+                        { key: "carbs", label: "carbs" },
                       ] as const
                     ).map(({ key, label }) => (
                       <div key={key} className="space-y-1">

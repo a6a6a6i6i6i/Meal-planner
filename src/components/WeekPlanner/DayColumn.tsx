@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { format } from "date-fns";
 import MealSlot from "./MealSlot";
 import DayTotals from "./DayTotals";
@@ -16,7 +16,7 @@ interface DayColumnProps {
   onUpdateSlot: (slot: SlotKey, entry: MealEntry | null) => void;
 }
 
-export default function DayColumn({ date, dayPlan, goals, meals, colIndex, onUpdateSlot }: DayColumnProps) {
+const DayColumn = memo(function DayColumn({ date, dayPlan, goals, meals, colIndex, onUpdateSlot }: DayColumnProps) {
   const totals = calculateDayTotals(dayPlan, meals);
   const swap = findBestSwap(dayPlan, meals, goals);
   const [swapFlashed, setSwapFlashed] = useState(false);
@@ -34,7 +34,8 @@ export default function DayColumn({ date, dayPlan, goals, meals, colIndex, onUpd
 
   return (
     <div
-      className={`day-col-enter min-w-[150px] flex flex-col gap-3 p-4 rounded-2xl border ${
+      data-today={isToday}
+      className={`day-col-enter snap-start shrink-0 w-[calc(100vw-3rem)] sm:w-72 lg:w-auto lg:shrink flex flex-col gap-3 p-4 rounded-2xl border ${
         isToday
           ? `today-col-pulse border-brand-peach/60 border-t-[3px] border-t-brand-ochre bg-brand-peach/10`
           : "border-border bg-background"
@@ -76,4 +77,6 @@ export default function DayColumn({ date, dayPlan, goals, meals, colIndex, onUpd
       />
     </div>
   );
-}
+});
+
+export default DayColumn;

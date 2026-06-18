@@ -36,10 +36,10 @@ export default function SwapSuggestion({ suggestion, meals, onAccept }: SwapSugg
       <Button
         size="sm"
         variant="outline"
-        className="h-6 text-[10px] px-2 border-brand-lavender/40 text-brand-lavender bg-brand-lavender/10 hover:bg-brand-lavender/20"
+        className="h-8 w-full text-[10px] px-2 border-brand-lavender/40 text-brand-lavender bg-brand-lavender/10 hover:bg-brand-lavender/20 active:scale-95 transition-transform duration-100"
         onClick={onAccept}
       >
-        Accept swap
+        Apply swap
       </Button>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,7 +36,7 @@ export default function MealPicker({ meals, selectedId, onSelect }: MealPickerPr
           role="combobox"
           aria-expanded={open}
           className={cn(
-            "w-full justify-between text-left font-normal h-8 text-xs px-2",
+            "w-full justify-between text-left font-normal h-9 text-xs px-2",
             !selected && "border-dashed text-muted-foreground"
           )}
         >
@@ -50,9 +51,19 @@ export default function MealPicker({ meals, selectedId, onSelect }: MealPickerPr
           <CommandInput placeholder="Search meals…" className="h-9" />
           <CommandList>
             <CommandEmpty>
-              {meals.length === 0
-                ? "No meals in library yet."
-                : "No meals found."}
+              {meals.length === 0 ? (
+                <div className="text-center py-1">
+                  <p className="text-xs text-muted-foreground mb-2">No meals in library yet.</p>
+                  <Link
+                    to="/library"
+                    className="text-xs font-medium text-foreground underline underline-offset-2 hover:opacity-70 transition-opacity"
+                  >
+                    Add meals to your library →
+                  </Link>
+                </div>
+              ) : (
+                "No meals found."
+              )}
             </CommandEmpty>
             <CommandGroup>
               {meals.map((meal) => (

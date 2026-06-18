@@ -14,4 +14,24 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-ui": [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-popover",
+            "@radix-ui/react-tooltip",
+            "@radix-ui/react-separator",
+            "@radix-ui/react-label",
+            "cmdk",
+            "lucide-react",
+          ],
+          "vendor-form": ["react-hook-form", "@hookform/resolvers", "zod"],
+          "vendor-utils": ["date-fns", "sonner", "clsx", "tailwind-merge"],
+        },
+      },
+    },
+  },
 });

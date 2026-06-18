@@ -24,7 +24,14 @@ export default function MacroBar({ label, actual, target, color, colIndex = 0 }:
           {Math.round(actual)}g / {target}g
         </span>
       </div>
-      <div className="h-2 w-full rounded-full bg-surface-card overflow-hidden">
+      <div
+        className="h-2 w-full rounded-full bg-surface-card overflow-hidden"
+        role="progressbar"
+        aria-label={label}
+        aria-valuenow={Math.round(actual)}
+        aria-valuemin={0}
+        aria-valuemax={target}
+      >
         <div
           className={`macro-bar-fill h-full rounded-full transition-[width] duration-500 ${over ? "bg-destructive" : colorMap[color]} ${pct >= 100 && !over ? "macro-bar-complete" : ""}`}
           style={{

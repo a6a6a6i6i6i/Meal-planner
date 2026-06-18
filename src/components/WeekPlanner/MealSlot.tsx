@@ -64,8 +64,8 @@ export default function MealSlot({ slot, entry, meals, colIndex = 0, onUpdate }:
 
       {deleted ? (
         <div className="slot-content-in flex items-center justify-between gap-1 text-xs text-destructive bg-destructive/10 rounded-lg px-2 py-1.5">
-          <span>Meal deleted</span>
-          <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => onUpdate(null)} aria-label="Clear slot">
+          <span>Meal removed from library</span>
+          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => onUpdate(null)} aria-label="Clear slot">
             <X className="h-3 w-3" />
           </Button>
         </div>
@@ -78,7 +78,7 @@ export default function MealSlot({ slot, entry, meals, colIndex = 0, onUpdate }:
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-5 w-5 shrink-0 text-muted-foreground active:scale-90 transition-transform duration-100"
+                  className="h-7 w-7 shrink-0 text-muted-foreground active:scale-90 transition-transform duration-100"
                   onClick={() => onUpdate(null)}
                   aria-label="Remove meal"
                 >
@@ -102,11 +102,11 @@ export default function MealSlot({ slot, entry, meals, colIndex = 0, onUpdate }:
                 type="button"
                 variant="outline"
                 size="sm"
-                className="h-6 w-full text-[10px] px-2 gap-1 active:scale-95 transition-transform duration-100"
+                className="h-8 w-full text-[10px] px-2 gap-1 active:scale-95 transition-transform duration-100"
                 onClick={() => setAdjustOpen(true)}
               >
                 <SlidersHorizontal className="h-3 w-3" />
-                Adjust grams
+                Adjust portions
               </Button>
               <IngredientAdjustDialog
                 open={adjustOpen}
@@ -119,7 +119,7 @@ export default function MealSlot({ slot, entry, meals, colIndex = 0, onUpdate }:
             </>
           ) : (
             <div className="flex items-center gap-1.5">
-              <span className="text-[10px] text-muted-foreground">×</span>
+              <span className="text-[10px] text-muted-foreground">Servings</span>
               <input
                 type="number"
                 min={0.25}
@@ -128,12 +128,9 @@ export default function MealSlot({ slot, entry, meals, colIndex = 0, onUpdate }:
                 value={entry!.servings}
                 onChange={(e) => handleServingsChange(e.target.value)}
                 onBlur={(e) => handleServingsChange(e.target.value)}
-                className="w-14 h-7 text-xs border border-border rounded-md px-1.5 bg-background focus:outline-none focus:ring-1 focus:ring-ring transition-shadow duration-150"
-                aria-label="Servings"
+                className="w-14 h-9 text-xs border border-border rounded-md px-1.5 bg-background focus:outline-none focus:ring-1 focus:ring-ring transition-shadow duration-150"
+                aria-label="Number of servings"
               />
-              <span className="text-[10px] text-muted-foreground">
-                serving{entry!.servings !== 1 ? "s" : ""}
-              </span>
             </div>
           )}
 

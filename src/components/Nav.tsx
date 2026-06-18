@@ -12,12 +12,12 @@ export default function Nav() {
     );
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center gap-6">
-        <div className="flex items-center gap-2 mr-4">
-          <UtensilsCrossed className="h-5 w-5 text-foreground" />
+    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center gap-3 sm:gap-6">
+        <div className="flex items-center gap-2 mr-2 sm:mr-4">
+          <UtensilsCrossed className="h-5 w-5 text-foreground shrink-0" />
           <span
-            className="text-[1.1rem] font-[500] leading-none tracking-[-0.01em] [font-family:var(--font-display)] [font-optical-sizing:auto]"
+            className="hidden sm:inline text-[1.1rem] font-[500] leading-none tracking-[-0.01em] [font-family:var(--font-display)] [font-optical-sizing:auto]"
           >Meal Planner</span>
         </div>
         <nav className="flex gap-1">
@@ -25,7 +25,8 @@ export default function Nav() {
             Planner
           </NavLink>
           <NavLink to="/library" className={linkClass}>
-            Meal Library
+            <span className="sm:hidden">Library</span>
+            <span className="hidden sm:inline">Meal Library</span>
           </NavLink>
         </nav>
       </div>

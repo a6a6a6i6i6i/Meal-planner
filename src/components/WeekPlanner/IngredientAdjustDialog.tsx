@@ -61,10 +61,10 @@ export default function IngredientAdjustDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>Adjust — {mealName}</DialogTitle>
+          <DialogTitle>Adjust portions</DialogTitle>
         </DialogHeader>
         <p className="text-xs text-muted-foreground -mt-2">
-          Override ingredient grams for this day only.
+          Change amounts for <span className="font-medium text-foreground">{mealName}</span> today only.
         </p>
         <div className="space-y-3">
           {ingredients.map((ing, i) => {
@@ -79,7 +79,7 @@ export default function IngredientAdjustDialog({
                   step={1}
                   value={isNaN(grams[i]) ? "" : grams[i]}
                   onChange={(e) => setGram(i, e.target.value)}
-                  className="w-20 h-8 text-xs"
+                  className="w-20 h-9 text-xs"
                   aria-label={`${ing.name} grams`}
                 />
                 <span className="text-[10px] text-muted-foreground w-4">g</span>
@@ -95,7 +95,7 @@ export default function IngredientAdjustDialog({
             Cancel
           </Button>
           <Button type="button" onClick={handleSave}>
-            Save
+            Apply
           </Button>
         </DialogFooter>
       </DialogContent>

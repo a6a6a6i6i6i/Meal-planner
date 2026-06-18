@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -11,7 +11,7 @@ interface MealCardProps {
   onDelete: () => void;
 }
 
-export default function MealCard({ meal, cardIndex, onEdit, onDelete }: MealCardProps) {
+const MealCard = memo(function MealCard({ meal, cardIndex, onEdit, onDelete }: MealCardProps) {
   const hasIngredients = meal.ingredients?.length > 0;
   const [exiting, setExiting] = useState(false);
 
@@ -49,7 +49,7 @@ export default function MealCard({ meal, cardIndex, onEdit, onDelete }: MealCard
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 text-muted-foreground hover:text-foreground active:scale-90 transition-transform duration-100"
+                className="h-9 w-9 text-muted-foreground hover:text-foreground active:scale-90 transition-transform duration-100"
                 onClick={onEdit}
                 aria-label="Edit meal"
               >
@@ -63,7 +63,7 @@ export default function MealCard({ meal, cardIndex, onEdit, onDelete }: MealCard
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 text-muted-foreground hover:text-destructive active:scale-90 transition-transform duration-100"
+                className="h-9 w-9 text-muted-foreground hover:text-destructive active:scale-90 transition-transform duration-100"
                 onClick={handleDelete}
                 aria-label="Delete meal"
               >
@@ -76,10 +76,10 @@ export default function MealCard({ meal, cardIndex, onEdit, onDelete }: MealCard
       </div>
       <div className="grid grid-cols-4 gap-1.5 text-center">
         {[
-          { label: "kcal",    value: Math.round(meal.calories), bg: "bg-brand-ochre/25" },
-          { label: "protein", value: `${meal.protein}g`,        bg: "bg-brand-pink/15"  },
-          { label: "fat",     value: `${meal.fat}g`,            bg: "bg-brand-mint/30"  },
-          { label: "carbs",   value: `${meal.carbs}g`,          bg: "bg-brand-peach/25" },
+          { label: "kcal",    value: Math.round(meal.calories),       bg: "bg-brand-ochre/25" },
+          { label: "protein", value: `${Math.round(meal.protein)}g`, bg: "bg-brand-pink/15"  },
+          { label: "fat",     value: `${Math.round(meal.fat)}g`,     bg: "bg-brand-mint/30"  },
+          { label: "carbs",   value: `${Math.round(meal.carbs)}g`,   bg: "bg-brand-peach/25" },
         ].map(({ label, value, bg }) => (
           <div key={label} className={`${bg} rounded-lg py-2 px-1`}>
             <div className="text-xs font-semibold text-foreground">{value}</div>
@@ -89,4 +89,6 @@ export default function MealCard({ meal, cardIndex, onEdit, onDelete }: MealCard
       </div>
     </div>
   );
-}
+});
+
+export default MealCard;

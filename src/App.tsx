@@ -1,26 +1,25 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { lazy, Suspense } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import WeekPlannerPage from "./pages/WeekPlannerPage";
-import MealLibraryPage from "./pages/MealLibraryPage";
-import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+const WeekPlannerPage = lazy(() => import("./pages/WeekPlannerPage"));
+const MealLibraryPage = lazy(() => import("./pages/MealLibraryPage"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <BrowserRouter basename="/Meal-planner">
+  <TooltipProvider>
+    <Toaster />
+    <BrowserRouter basename="/Meal-planner">
+      <Suspense>
         <Routes>
           <Route path="/" element={<WeekPlannerPage />} />
           <Route path="/library" element={<MealLibraryPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+      </Suspense>
+    </BrowserRouter>
+  </TooltipProvider>
 );
 
 export default App;
