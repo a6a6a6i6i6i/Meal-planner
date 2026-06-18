@@ -15,12 +15,12 @@ interface WeekHeaderProps {
 }
 
 function GoalPill({
-  dotColor,
+  dotClass,
   label,
   pillIndex,
   animating,
 }: {
-  dotColor: string;
+  dotClass: string;
   label: string;
   pillIndex: number;
   animating: boolean;
@@ -30,7 +30,7 @@ function GoalPill({
       className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-card text-xs font-semibold text-foreground ${animating ? "goal-pill-pop" : ""}`}
       style={{ ["--pill-i" as string]: pillIndex }}
     >
-      <span className="h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: dotColor }} />
+      <span className={`h-2 w-2 rounded-full flex-shrink-0 ${dotClass}`} />
       {label}
     </span>
   );
@@ -60,20 +60,20 @@ export default function WeekHeader({ weekKey, goals, onPrevWeek, onNextWeek, onU
     : `${format(monday, "MMM d")} – ${format(sunday, "MMM d, yyyy")}`;
 
   const pills = [
-    { key: "calories", dotColor: "#e8b94a", label: `${goals.calories} kcal/day` },
-    { key: "protein",  dotColor: "#ff4d8b", label: `${goals.protein}g protein`  },
-    { key: "fat",      dotColor: "#a4d4c5", label: `${goals.fat}g fat`          },
-    { key: "carbs",    dotColor: "#ffb084", label: `${goals.carbs}g carbs`      },
+    { key: "calories", dotClass: "bg-brand-ochre",  label: `${goals.calories} kcal/day` },
+    { key: "protein",  dotClass: "bg-brand-pink",   label: `${goals.protein}g protein`  },
+    { key: "fat",      dotClass: "bg-brand-mint",   label: `${goals.fat}g fat`          },
+    { key: "carbs",    dotClass: "bg-brand-peach",  label: `${goals.carbs}g carbs`      },
   ];
 
   return (
-    <div className="planner-header-enter flex flex-wrap items-center justify-between gap-4 py-6 border-b border-border mb-8">
-      <div className="flex items-center gap-3">
+    <div className="planner-header-enter flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 py-6 border-b border-border mb-8">
+      <div className="flex items-center justify-center gap-3">
         <Button variant="outline" size="icon" onClick={onPrevWeek} aria-label="Previous week"
           className="active:scale-90 transition-transform duration-100">
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <div className="text-center min-w-[200px]">
+        <div className="text-center w-44">
           <div className="text-sm font-medium text-foreground">{label}</div>
         </div>
         <Button variant="outline" size="icon" onClick={onNextWeek} aria-label="Next week"
@@ -82,9 +82,9 @@ export default function WeekHeader({ weekKey, goals, onPrevWeek, onNextWeek, onU
         </Button>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2">
         {pills.map((pill, i) => (
-          <GoalPill key={pill.key} dotColor={pill.dotColor} label={pill.label} pillIndex={i} animating={pillsAnimating} />
+          <GoalPill key={pill.key} dotClass={pill.dotClass} label={pill.label} pillIndex={i} animating={pillsAnimating} />
         ))}
         <Button variant="outline" size="sm" onClick={() => setGoalsOpen(true)}
           className="active:scale-95 transition-transform duration-100">

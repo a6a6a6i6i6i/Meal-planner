@@ -4,6 +4,7 @@ import { z } from "zod";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
@@ -52,7 +53,7 @@ export default function GoalsDialog({ open, onOpenChange, goals, onSave }: Goals
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>Daily goals</DialogTitle>
-          <p className="text-xs text-muted-foreground">These targets apply to each day of the week.</p>
+          <DialogDescription>These targets apply to each day of the week.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           {fields.map(({ id, label, unit }, i) => (

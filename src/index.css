@@ -31,7 +31,7 @@
     --muted:          46  51% 92%;   /* surface-card for muted fills */
     --accent:         46  51% 92%;
     --accent-foreground: 0  0%  4%;
-    --destructive:     0  84% 60%;   /* error        #ef4444 */
+    --destructive:     0  84% 40%;   /* error        #c13030 — darkened for 4.5:1 on warm-cream bg */
     --destructive-foreground: 0  0% 100%;
     --radius: 0.75rem;               /* 12px — Clay buttons & inputs */
 
@@ -356,6 +356,7 @@
 
 .macro-bar-complete {
   animation: macro-bar-complete-flash 500ms var(--ease-out-quart) both;
+  will-change: filter;
 }
 
 @media (prefers-reduced-motion: reduce) {

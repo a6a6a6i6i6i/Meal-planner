@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Nav from "@/components/Nav";
 import WeekPlanner from "@/components/WeekPlanner/WeekPlanner";
 import { useMealPlanner } from "@/hooks/useMealPlanner";
@@ -6,10 +7,12 @@ export default function WeekPlannerPage() {
   const { meals, weekKey, weekPlan, goToPrevWeek, goToNextWeek, updateDaySlot, updateGoals } =
     useMealPlanner();
 
+  useEffect(() => { document.title = "Meal Planner · Week Plan"; }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Nav />
-      <main className="py-6">
+      <main id="main-content" className="py-6">
         <WeekPlanner
           weekKey={weekKey}
           weekPlan={weekPlan}

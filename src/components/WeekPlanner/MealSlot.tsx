@@ -64,9 +64,9 @@ export default function MealSlot({ slot, entry, meals, colIndex = 0, onUpdate }:
       </div>
 
       {deleted ? (
-        <div className="slot-content-in flex items-center justify-between gap-1 text-xs text-destructive bg-destructive/10 rounded-lg px-2 py-1.5">
+        <div className="slot-content-in flex items-center justify-between gap-1 text-xs bg-destructive/10 rounded-lg px-2 py-1.5" style={{ color: 'hsl(0 84% 35%)' }}>
           <span>Meal removed from library</span>
-          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => onUpdate(null)} aria-label="Clear slot">
+          <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => onUpdate(null)} aria-label="Clear slot" style={{ color: 'hsl(0 84% 35%)' }}>
             <X className="h-3 w-3" />
           </Button>
         </div>

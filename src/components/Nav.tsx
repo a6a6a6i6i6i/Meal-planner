@@ -13,6 +13,12 @@ export default function Nav() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:px-3 focus:py-1.5 focus:text-sm focus:font-medium focus:bg-background focus:border focus:border-border focus:rounded-md focus:shadow-sm"
+      >
+        Skip to main content
+      </a>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center gap-3 sm:gap-6">
         <div className="flex items-center gap-2 mr-2 sm:mr-4">
           <UtensilsCrossed className="h-5 w-5 text-foreground shrink-0" />

@@ -33,7 +33,7 @@ export default function MacroBar({ label, actual, target, color, colIndex = 0 }:
         aria-valuemax={target}
       >
         <div
-          className={`macro-bar-fill h-full rounded-full transition-[width] duration-500 ${over ? "bg-destructive" : colorMap[color]} ${pct >= 100 && !over ? "macro-bar-complete" : ""}`}
+          className={`macro-bar-fill h-full rounded-full ${over ? "bg-destructive" : colorMap[color]} ${pct >= 100 && !over ? "macro-bar-complete" : ""}`}
           style={{
             width: `${pct}%`,
             ["--col-i" as string]: colIndex,
