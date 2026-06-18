@@ -19,7 +19,7 @@ export default function SwapSuggestion({ suggestion, meals, onAccept }: SwapSugg
   const proteinDelta = Math.round(suggestion.proteinDelta * 10) / 10;
 
   return (
-    <div className="mt-1 rounded-2xl bg-brand-lavender/15 border border-brand-lavender/30 p-2.5 space-y-1.5">
+    <div className="swap-appear mt-1 rounded-2xl bg-brand-lavender/15 border border-brand-lavender/30 p-2.5 space-y-1.5">
       <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-brand-lavender">
         <Lightbulb className="h-3 w-3" />
         Swap suggestion

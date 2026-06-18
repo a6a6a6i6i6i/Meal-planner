@@ -42,9 +42,9 @@ export default function GoalsDialog({ open, onOpenChange, goals, onSave }: Goals
 
   const fields: { id: keyof FormData; label: string; unit: string }[] = [
     { id: "calories", label: "Calories", unit: "kcal/day" },
-    { id: "protein", label: "Protein", unit: "g/day" },
-    { id: "fat", label: "Fat", unit: "g/day" },
-    { id: "carbs", label: "Carbs", unit: "g/day" },
+    { id: "protein",  label: "Protein",  unit: "g/day"    },
+    { id: "fat",      label: "Fat",      unit: "g/day"    },
+    { id: "carbs",    label: "Carbs",    unit: "g/day"    },
   ];
 
   return (
@@ -54,8 +54,12 @@ export default function GoalsDialog({ open, onOpenChange, goals, onSave }: Goals
           <DialogTitle>Weekly goals</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-          {fields.map(({ id, label, unit }) => (
-            <div key={id} className="space-y-1">
+          {fields.map(({ id, label, unit }, i) => (
+            <div
+              key={id}
+              className="goals-field-enter space-y-1"
+              style={{ ["--field-i" as string]: i }}
+            >
               <Label htmlFor={id}>
                 {label} <span className="text-muted-foreground font-normal">({unit})</span>
               </Label>
@@ -64,14 +68,27 @@ export default function GoalsDialog({ open, onOpenChange, goals, onSave }: Goals
                 type="number"
                 min={0}
                 step={id === "calories" ? 1 : 0.1}
+                className="transition-shadow duration-150 focus:ring-2 focus:ring-brand-ochre/40"
                 {...register(id, { valueAsNumber: true })}
               />
               {errors[id] && <p className="text-xs text-destructive">{errors[id]?.message}</p>}
             </div>
           ))}
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button type="submit">Save goals</Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="active:scale-95 transition-transform duration-100"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="active:scale-95 transition-transform duration-100"
+            >
+              Save goals
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

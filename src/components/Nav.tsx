@@ -16,7 +16,9 @@ export default function Nav() {
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center gap-6">
         <div className="flex items-center gap-2 mr-4">
           <UtensilsCrossed className="h-5 w-5 text-foreground" />
-          <span className="text-base font-semibold tracking-tight">Meal Planner</span>
+          <span
+            className="text-[1.1rem] font-[500] leading-none tracking-[-0.01em] [font-family:var(--font-display)] [font-optical-sizing:auto]"
+          >Meal Planner</span>
         </div>
         <nav className="flex gap-1">
           <NavLink to="/" end className={linkClass}>

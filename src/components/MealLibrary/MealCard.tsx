@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -5,15 +6,32 @@ import type { Meal } from "@/types";
 
 interface MealCardProps {
   meal: Meal;
+  cardIndex: number;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
+export default function MealCard({ meal, cardIndex, onEdit, onDelete }: MealCardProps) {
   const hasIngredients = meal.ingredients?.length > 0;
+  const [exiting, setExiting] = useState(false);
+
+  const handleDelete = () => {
+    setExiting(true);
+    setTimeout(onDelete, 160);
+  };
+
+  const staggerIndex = Math.min(cardIndex, 7);
 
   return (
-    <div className="border border-border rounded-2xl p-4 bg-background flex flex-col gap-3">
+    <div
+      className={`
+        border border-border rounded-2xl p-5 bg-background flex flex-col gap-4
+        transition-[transform,box-shadow] duration-200 ease-[cubic-bezier(0.25,1,0.5,1)]
+        hover:-translate-y-1 hover:shadow-[0_4px_16px_0_rgba(0,0,0,0.08)]
+        ${exiting ? "meal-card-exit" : "meal-card-enter"}
+      `}
+      style={{ ["--card-i" as string]: staggerIndex }}
+    >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <h3 className="font-semibold text-sm leading-snug tracking-tight">{meal.name}</h3>
@@ -31,7 +49,7 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                className="h-7 w-7 text-muted-foreground hover:text-foreground active:scale-90 transition-transform duration-100"
                 onClick={onEdit}
                 aria-label="Edit meal"
               >
@@ -45,8 +63,8 @@ export default function MealCard({ meal, onEdit, onDelete }: MealCardProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 text-muted-foreground hover:text-destructive"
-                onClick={onDelete}
+                className="h-7 w-7 text-muted-foreground hover:text-destructive active:scale-90 transition-transform duration-100"
+                onClick={handleDelete}
                 aria-label="Delete meal"
               >
                 <Trash2 className="h-3.5 w-3.5" />

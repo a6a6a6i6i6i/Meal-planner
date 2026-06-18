@@ -79,5 +79,304 @@
     @apply bg-background text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
+    --font-display: 'Fraunces', Georgia, serif;
+  }
+
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+}
+
+/* ── Shimmer border property ───────────────────── */
+@property --shimmer-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ── Shared easing ─────────────────────────────── */
+:root {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ── Meal Library animations ───────────────────── */
+
+@keyframes meal-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes meal-card-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+}
+
+@keyframes empty-state-breathe {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 1;   }
+}
+
+@keyframes meal-library-header-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.meal-card-enter {
+  animation: meal-card-in 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--card-i, 0) * 55ms);
+}
+
+.meal-card-exit {
+  animation: meal-card-out 180ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  pointer-events: none;
+}
+
+.meal-library-header-enter {
+  animation: meal-library-header-in 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.empty-state-breathe {
+  animation: empty-state-breathe 3s ease-in-out infinite;
+}
+
+/* ── Planner animations ────────────────────────── */
+
+@keyframes day-col-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes today-pulse {
+  0%   { box-shadow: 0 0 0 0 hsl(var(--brand-ochre) / 0.35); }
+  60%  { box-shadow: 0 0 0 6px hsl(var(--brand-ochre) / 0); }
+  100% { box-shadow: 0 0 0 0 hsl(var(--brand-ochre) / 0); }
+}
+
+@keyframes macro-bar-expand {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes slot-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes swap-appear {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes planner-header-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes goals-field-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.day-col-enter {
+  animation: day-col-in 420ms var(--ease-out-expo) both;
+  animation-delay: calc(var(--col-i, 0) * 40ms);
+}
+
+.today-col-pulse {
+  animation: today-pulse 1.2s var(--ease-out-quart) 350ms both;
+}
+
+.macro-bar-fill {
+  transform-origin: left;
+  animation: macro-bar-expand 700ms var(--ease-out-expo) both;
+  animation-delay: calc(var(--col-i, 0) * 40ms + 200ms);
+}
+
+.slot-content-in {
+  animation: slot-content-in 260ms var(--ease-out-quart) both;
+}
+
+.swap-appear {
+  animation: swap-appear 300ms var(--ease-out-quart) both;
+}
+
+.planner-header-enter {
+  animation: planner-header-in 480ms var(--ease-out-expo) both;
+}
+
+.goals-field-enter {
+  animation: goals-field-in 280ms var(--ease-out-quart) both;
+  animation-delay: calc(var(--field-i, 0) * 50ms);
+}
+
+/* ── Idle shimmer border ───────────────────────── */
+
+@keyframes btn-shimmer-spin {
+  to { --shimmer-angle: 360deg; }
+}
+
+@keyframes btn-shimmer-fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.btn-shimmer-wrapper {
+  position: relative;
+  display: inline-flex;
+  isolation: isolate;
+}
+
+.btn-shimmer-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: var(--radius); /* 12px — wraps the 10px button corners */
+  background: conic-gradient(
+    from var(--shimmer-angle),
+    transparent 0%,
+    transparent 30%,
+    hsl(42 78% 60% / 0.6) 42%,
+    hsl(42 78% 75%) 50%,
+    hsl(339 100% 72% / 0.5) 55%,
+    hsl(42 78% 60% / 0.6) 62%,
+    transparent 72%,
+    transparent 100%
+  );
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 600ms ease;
+}
+
+.btn-shimmer-wrapper.is-idle::before {
+  opacity: 1;
+  animation:
+    btn-shimmer-spin 2.2s linear infinite,
+    btn-shimmer-fadein 600ms ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-shimmer-wrapper::before {
+    animation: none !important;
+    background: hsl(42 78% 60% / 0.4) !important;
+    border: none;
+  }
+}
+
+/* ── Delight animations ────────────────────────── */
+
+@keyframes slot-fill-glow {
+  0%   { box-shadow: 0 0 0 0 hsl(var(--brand-ochre) / 0.5); }
+  35%  { box-shadow: 0 0 0 5px hsl(var(--brand-ochre) / 0.2); }
+  100% { box-shadow: 0 0 0 0 hsl(var(--brand-ochre) / 0); }
+}
+
+@keyframes goal-pill-pop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.1); }
+  65%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes swap-col-flash {
+  0%   { background-color: transparent; }
+  25%  { background-color: hsl(var(--brand-lavender) / 0.18); }
+  100% { background-color: transparent; }
+}
+
+@keyframes macro-bar-complete-flash {
+  0%   { filter: brightness(1); }
+  40%  { filter: brightness(1.35) saturate(1.2); }
+  100% { filter: brightness(1); }
+}
+
+.slot-fill-glow {
+  border-radius: 0.5rem;
+  animation: slot-fill-glow 650ms var(--ease-out-expo) both;
+}
+
+.goal-pill-pop {
+  animation: goal-pill-pop 400ms var(--ease-out-quart) both;
+  animation-delay: calc(var(--pill-i, 0) * 60ms);
+}
+
+.swap-col-flash {
+  animation: swap-col-flash 550ms var(--ease-out-quart) both;
+}
+
+.macro-bar-complete {
+  animation: macro-bar-complete-flash 500ms var(--ease-out-quart) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meal-card-enter,
+  .meal-card-exit,
+  .meal-library-header-enter,
+  .empty-state-breathe,
+  .day-col-enter,
+  .today-col-pulse,
+  .macro-bar-fill,
+  .slot-content-in,
+  .swap-appear,
+  .planner-header-enter,
+  .goals-field-enter,
+  .slot-fill-glow,
+  .goal-pill-pop,
+  .swap-col-flash,
+  .macro-bar-complete {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    box-shadow: none !important;
   }
 }

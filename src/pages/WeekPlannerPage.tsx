@@ -9,7 +9,7 @@ export default function WeekPlannerPage() {
   return (
     <div className="min-h-screen bg-background">
       <Nav />
-      <main className="py-4">
+      <main className="py-6">
         <WeekPlanner
           weekKey={weekKey}
           weekPlan={weekPlan}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { X, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -17,11 +17,24 @@ interface MealSlotProps {
   slot: SlotKey;
   entry: MealEntry | null;
   meals: Meal[];
+  colIndex?: number;
   onUpdate: (entry: MealEntry | null) => void;
 }
 
-export default function MealSlot({ slot, entry, meals, onUpdate }: MealSlotProps) {
+export default function MealSlot({ slot, entry, meals, colIndex = 0, onUpdate }: MealSlotProps) {
   const [adjustOpen, setAdjustOpen] = useState(false);
+  const [justFilled, setJustFilled] = useState(false);
+  const prevMealId = useRef<string | null>(entry?.mealId ?? null);
+
+  useEffect(() => {
+    if (!prevMealId.current && entry?.mealId) {
+      setJustFilled(true);
+      const t = setTimeout(() => setJustFilled(false), 700);
+      return () => clearTimeout(t);
+    }
+    prevMealId.current = entry?.mealId ?? null;
+  }, [entry?.mealId]);
+
   const meal = entry ? meals.find((m) => m.id === entry.mealId) : null;
   const deleted = entry && !meal;
   const hasIngredients = meal && meal.ingredients?.length > 0;
@@ -50,19 +63,25 @@ export default function MealSlot({ slot, entry, meals, onUpdate }: MealSlotProps
       </div>
 
       {deleted ? (
-        <div className="flex items-center justify-between gap-1 text-xs text-destructive bg-destructive/10 rounded-lg px-2 py-1.5">
+        <div className="slot-content-in flex items-center justify-between gap-1 text-xs text-destructive bg-destructive/10 rounded-lg px-2 py-1.5">
           <span>Meal deleted</span>
           <Button variant="ghost" size="icon" className="h-5 w-5" onClick={() => onUpdate(null)} aria-label="Clear slot">
             <X className="h-3 w-3" />
           </Button>
         </div>
       ) : meal ? (
-        <div className="space-y-1.5">
+        <div key={meal.id} className={`slot-content-in space-y-1.5 ${justFilled ? "slot-fill-glow" : ""}`}>
           <div className="flex items-center gap-1">
             <span className="text-xs font-semibold truncate flex-1 leading-snug">{meal.name}</span>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-5 w-5 shrink-0 text-muted-foreground" onClick={() => onUpdate(null)} aria-label="Remove meal">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-5 w-5 shrink-0 text-muted-foreground active:scale-90 transition-transform duration-100"
+                  onClick={() => onUpdate(null)}
+                  aria-label="Remove meal"
+                >
                   <X className="h-3 w-3" />
                 </Button>
               </TooltipTrigger>
@@ -83,7 +102,7 @@ export default function MealSlot({ slot, entry, meals, onUpdate }: MealSlotProps
                 type="button"
                 variant="outline"
                 size="sm"
-                className="h-6 w-full text-[10px] px-2 gap-1"
+                className="h-6 w-full text-[10px] px-2 gap-1 active:scale-95 transition-transform duration-100"
                 onClick={() => setAdjustOpen(true)}
               >
                 <SlidersHorizontal className="h-3 w-3" />
@@ -109,7 +128,7 @@ export default function MealSlot({ slot, entry, meals, onUpdate }: MealSlotProps
                 value={entry!.servings}
                 onChange={(e) => handleServingsChange(e.target.value)}
                 onBlur={(e) => handleServingsChange(e.target.value)}
-                className="w-14 h-7 text-xs border border-border rounded-md px-1.5 bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+                className="w-14 h-7 text-xs border border-border rounded-md px-1.5 bg-background focus:outline-none focus:ring-1 focus:ring-ring transition-shadow duration-150"
                 aria-label="Servings"
               />
               <span className="text-[10px] text-muted-foreground">

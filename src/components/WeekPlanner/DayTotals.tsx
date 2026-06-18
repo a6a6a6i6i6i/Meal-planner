@@ -4,9 +4,10 @@ import type { MacroTotals, WeekGoals } from "@/types";
 interface DayTotalsProps {
   totals: MacroTotals;
   goals: WeekGoals;
+  colIndex?: number;
 }
 
-export default function DayTotals({ totals, goals }: DayTotalsProps) {
+export default function DayTotals({ totals, goals, colIndex = 0 }: DayTotalsProps) {
   const calOver = totals.calories > goals.calories;
 
   return (
@@ -17,9 +18,9 @@ export default function DayTotals({ totals, goals }: DayTotalsProps) {
           {Math.round(totals.calories)}<span className="text-[10px] font-normal text-muted-foreground"> / {goals.calories}</span>
         </span>
       </div>
-      <MacroBar label="Protein" actual={totals.protein} target={goals.protein} color="protein" />
-      <MacroBar label="Fat"     actual={totals.fat}     target={goals.fat}     color="fat" />
-      <MacroBar label="Carbs"   actual={totals.carbs}   target={goals.carbs}   color="carbs" />
+      <MacroBar label="Protein" actual={totals.protein} target={goals.protein} color="protein" colIndex={colIndex} />
+      <MacroBar label="Fat"     actual={totals.fat}     target={goals.fat}     color="fat"     colIndex={colIndex} />
+      <MacroBar label="Carbs"   actual={totals.carbs}   target={goals.carbs}   color="carbs"   colIndex={colIndex} />
     </div>
   );
 }

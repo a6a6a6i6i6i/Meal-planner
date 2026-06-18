@@ -28,7 +28,7 @@ export default function WeekPlanner({
   const emptyDay = { breakfast: null, lunch: null, dinner: null };
 
   return (
-    <div className="max-w-7xl mx-auto px-4">
+    <div className="max-w-7xl mx-auto px-6">
       <WeekHeader
         weekKey={weekKey}
         goals={weekPlan.goals}
@@ -37,9 +37,9 @@ export default function WeekPlanner({
         onUpdateGoals={onUpdateGoals}
       />
 
-      <div className="overflow-x-auto pb-4">
-        <div className="grid grid-cols-7 gap-3 min-w-[1100px]">
-          {dates.map((date) => {
+      <div className="overflow-x-auto pb-6">
+        <div key={weekKey} className="grid grid-cols-7 gap-4 min-w-[1100px]">
+          {dates.map((date, i) => {
             const dayKey = formatDayKey(date);
             const dayPlan = weekPlan.days[dayKey] ?? emptyDay;
             return (
@@ -49,6 +49,7 @@ export default function WeekPlanner({
                 dayPlan={dayPlan}
                 goals={weekPlan.goals}
                 meals={meals}
+                colIndex={i}
                 onUpdateSlot={(slot, entry) => onUpdateDaySlot(dayKey, slot, entry)}
               />
             );

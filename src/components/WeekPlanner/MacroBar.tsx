@@ -3,15 +3,16 @@ interface MacroBarProps {
   actual: number;
   target: number;
   color: "protein" | "fat" | "carbs";
+  colIndex?: number;
 }
 
-const colorMap: Record<MacroBarProps["color"], string> = {
+const colorMap: Record<"protein" | "fat" | "carbs", string> = {
   protein: "bg-brand-pink",
   fat:     "bg-brand-mint",
   carbs:   "bg-brand-ochre",
 };
 
-export default function MacroBar({ label, actual, target, color }: MacroBarProps) {
+export default function MacroBar({ label, actual, target, color, colIndex = 0 }: MacroBarProps) {
   const pct = target > 0 ? Math.min((actual / target) * 100, 100) : 0;
   const over = target > 0 && actual > target;
 
@@ -25,8 +26,11 @@ export default function MacroBar({ label, actual, target, color }: MacroBarProps
       </div>
       <div className="h-2 w-full rounded-full bg-surface-card overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all ${over ? "bg-destructive" : colorMap[color]}`}
-          style={{ width: `${pct}%` }}
+          className={`macro-bar-fill h-full rounded-full transition-[width] duration-500 ${over ? "bg-destructive" : colorMap[color]} ${pct >= 100 && !over ? "macro-bar-complete" : ""}`}
+          style={{
+            width: `${pct}%`,
+            ["--col-i" as string]: colIndex,
+          }}
         />
       </div>
     </div>
