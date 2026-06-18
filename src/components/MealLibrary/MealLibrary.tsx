@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import MealCard from "./MealCard";
 import MealForm from "./MealForm";
 import { useIdleTimer } from "@/hooks/useIdleTimer";
@@ -17,7 +18,32 @@ interface MealLibraryProps {
 export default function MealLibrary({ meals, onAdd, onUpdate, onDelete }: MealLibraryProps) {
   const [addOpen, setAddOpen] = useState(false);
   const [editing, setEditing] = useState<Meal | null>(null);
+  const [search, setSearch] = useState("");
   const isIdle = useIdleTimer(10_000);
+
+  const filteredMeals = search.trim()
+    ? meals.filter((m) => m.name.toLowerCase().includes(search.toLowerCase()))
+    : meals;
+
+  function handleDelete(meal: Meal) {
+    onDelete(meal.id);
+    toast(`"${meal.name}" removed`, {
+      action: {
+        label: "Undo",
+        onClick: () => {
+          onAdd({
+            name: meal.name,
+            calories: meal.calories,
+            protein: meal.protein,
+            fat: meal.fat,
+            carbs: meal.carbs,
+            ingredients: meal.ingredients,
+          });
+        },
+      },
+      duration: 5000,
+    });
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-10 sm:pt-12 pb-10">
@@ -42,6 +68,18 @@ export default function MealLibrary({ meals, onAdd, onUpdate, onDelete }: MealLi
         </span>
       </div>
 
+      {meals.length > 0 && (
+        <div className="relative mb-6">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search meals…"
+            className="pl-9"
+          />
+        </div>
+      )}
+
       {meals.length === 0 ? (
         <div className="empty-state-breathe border border-dashed border-border rounded-3xl py-20 px-8 text-center bg-surface-soft/50">
           <div className="text-5xl mb-6 select-none" aria-hidden>🥗</div>
@@ -62,18 +100,19 @@ export default function MealLibrary({ meals, onAdd, onUpdate, onDelete }: MealLi
             Add your first meal
           </Button>
         </div>
+      ) : filteredMeals.length === 0 ? (
+        <div className="text-center py-16 text-sm text-muted-foreground">
+          No meals match <span className="font-medium text-foreground">"{search}"</span>
+        </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {meals.map((meal, i) => (
+          {filteredMeals.map((meal, i) => (
             <MealCard
               key={meal.id}
               meal={meal}
               cardIndex={i}
               onEdit={() => setEditing(meal)}
-              onDelete={() => {
-                onDelete(meal.id);
-                toast.success(`"${meal.name}" removed from library`);
-              }}
+              onDelete={() => handleDelete(meal)}
             />
           ))}
         </div>

@@ -51,7 +51,8 @@ export default function GoalsDialog({ open, onOpenChange, goals, onSave }: Goals
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>Weekly goals</DialogTitle>
+          <DialogTitle>Daily goals</DialogTitle>
+          <p className="text-xs text-muted-foreground">These targets apply to each day of the week.</p>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           {fields.map(({ id, label, unit }, i) => (

@@ -54,7 +54,8 @@ export default function MealSlot({ slot, entry, meals, colIndex = 0, onUpdate }:
     onUpdate({ ...entry, ingredientOverrides: overrides });
   }
 
-  const entryKcal = meal && entry ? Math.round(computeEntryMacros(meal, entry).calories) : 0;
+  const entryMacros = meal && entry ? computeEntryMacros(meal, entry) : null;
+  const entryKcal = entryMacros ? Math.round(entryMacros.calories) : 0;
 
   return (
     <div className="space-y-1.5">
@@ -134,7 +135,14 @@ export default function MealSlot({ slot, entry, meals, colIndex = 0, onUpdate }:
             </div>
           )}
 
-          <div className="text-[10px] text-muted-foreground">{entryKcal} kcal</div>
+          {entryMacros && (
+            <div className="text-[10px] text-muted-foreground leading-snug">
+              {entryKcal} kcal
+              {" · "}P {Math.round(entryMacros.protein)}g
+              {" · "}F {Math.round(entryMacros.fat)}g
+              {" · "}C {Math.round(entryMacros.carbs)}g
+            </div>
+          )}
           <MealPicker
             meals={meals}
             selectedId={entry!.mealId}

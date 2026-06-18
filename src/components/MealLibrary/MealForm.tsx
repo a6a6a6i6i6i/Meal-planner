@@ -245,7 +245,10 @@ export default function MealForm({ open, onOpenChange, initial, onSave }: MealFo
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>
                   </div>
-                  <p className="text-[10px] text-muted-foreground">Per {gramsLabel}</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    Macros for exactly {gramsLabel}
+                    <span className="ml-1 opacity-60">— scales with the amount above</span>
+                  </p>
                   <div className="grid grid-cols-4 gap-2">
                     {(
                       [

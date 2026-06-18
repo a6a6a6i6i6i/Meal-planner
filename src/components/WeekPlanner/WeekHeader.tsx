@@ -60,10 +60,10 @@ export default function WeekHeader({ weekKey, goals, onPrevWeek, onNextWeek, onU
     : `${format(monday, "MMM d")} – ${format(sunday, "MMM d, yyyy")}`;
 
   const pills = [
-    { dotColor: "#e8b94a", label: `${goals.calories} kcal` },
-    { dotColor: "#ff4d8b", label: `${goals.protein}g protein` },
-    { dotColor: "#a4d4c5", label: `${goals.fat}g fat`     },
-    { dotColor: "#ffb084", label: `${goals.carbs}g carbs`  },
+    { key: "calories", dotColor: "#e8b94a", label: `${goals.calories} kcal/day` },
+    { key: "protein",  dotColor: "#ff4d8b", label: `${goals.protein}g protein`  },
+    { key: "fat",      dotColor: "#a4d4c5", label: `${goals.fat}g fat`          },
+    { key: "carbs",    dotColor: "#ffb084", label: `${goals.carbs}g carbs`      },
   ];
 
   return (
@@ -73,10 +73,7 @@ export default function WeekHeader({ weekKey, goals, onPrevWeek, onNextWeek, onU
           className="active:scale-90 transition-transform duration-100">
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <div className="text-center min-w-[240px]">
-          <div className="text-[10px] font-semibold tracking-[0.15em] uppercase text-muted-foreground mb-0.5">
-            Week {weekKey.split("-W")[1]}
-          </div>
+        <div className="text-center min-w-[200px]">
           <div className="text-sm font-medium text-foreground">{label}</div>
         </div>
         <Button variant="outline" size="icon" onClick={onNextWeek} aria-label="Next week"
@@ -87,7 +84,7 @@ export default function WeekHeader({ weekKey, goals, onPrevWeek, onNextWeek, onU
 
       <div className="flex flex-wrap items-center gap-2">
         {pills.map((pill, i) => (
-          <GoalPill key={pill.label} dotColor={pill.dotColor} label={pill.label} pillIndex={i} animating={pillsAnimating} />
+          <GoalPill key={pill.key} dotColor={pill.dotColor} label={pill.label} pillIndex={i} animating={pillsAnimating} />
         ))}
         <Button variant="outline" size="sm" onClick={() => setGoalsOpen(true)}
           className="active:scale-95 transition-transform duration-100">
