@@ -4,17 +4,18 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import MealCard from "./MealCard";
 import MealForm from "./MealForm";
-import type { Meal } from "@/types";
+import type { Meal, IngredientDef } from "@/types";
 
 interface MealLibraryProps {
   meals: Meal[];
+  ingredientLibrary: IngredientDef[];
   onAdd: (data: Omit<Meal, "id">) => void;
   onUpdate: (id: string, data: Omit<Meal, "id">) => void;
   onDelete: (id: string) => void;
   onDuplicate: (id: string) => void;
 }
 
-export default function MealLibrary({ meals, onAdd, onUpdate, onDelete, onDuplicate }: MealLibraryProps) {
+export default function MealLibrary({ meals, ingredientLibrary, onAdd, onUpdate, onDelete, onDuplicate }: MealLibraryProps) {
   const [addOpen, setAddOpen] = useState(false);
   const [editing, setEditing] = useState<Meal | null>(null);
 
@@ -63,6 +64,7 @@ export default function MealLibrary({ meals, onAdd, onUpdate, onDelete, onDuplic
       <MealForm
         open={addOpen}
         onOpenChange={setAddOpen}
+        ingredientLibrary={ingredientLibrary}
         onSave={(data) => {
           onAdd(data);
           toast.success(`"${data.name}" added to library`);
@@ -74,6 +76,7 @@ export default function MealLibrary({ meals, onAdd, onUpdate, onDelete, onDuplic
           open={!!editing}
           onOpenChange={(v) => { if (!v) setEditing(null); }}
           initial={editing}
+          ingredientLibrary={ingredientLibrary}
           onSave={(data) => {
             onUpdate(editing.id, data);
             setEditing(null);

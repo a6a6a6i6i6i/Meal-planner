@@ -34,6 +34,9 @@ export default function Nav() {
             <span className="sm:hidden">Library</span>
             <span className="hidden sm:inline">Meal Library</span>
           </NavLink>
+          <NavLink to="/ingredients" className={linkClass}>
+            Ingredients
+          </NavLink>
         </nav>
       </div>
     </header>

@@ -14,7 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import type { Meal } from "@/types";
+import IngredientAutocomplete from "./IngredientAutocomplete";
+import type { Meal, IngredientDef } from "@/types";
 
 const ingredientSchema = z.object({
   ingredientId: z.string(),
@@ -69,10 +70,11 @@ interface MealFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initial?: Meal;
+  ingredientLibrary?: IngredientDef[];
   onSave: (data: Omit<Meal, "id">) => void;
 }
 
-export default function MealForm({ open, onOpenChange, initial, onSave }: MealFormProps) {
+export default function MealForm({ open, onOpenChange, initial, ingredientLibrary = [], onSave }: MealFormProps) {
   const {
     register,
     handleSubmit,
@@ -128,6 +130,19 @@ export default function MealForm({ open, onOpenChange, initial, onSave }: MealFo
     });
     prevGramsRef.current = gramsStr;
   }, [gramsStr]);
+
+  function pickIngredientDef(index: number, def: IngredientDef) {
+    setValue(`ingredients.${index}.name`, def.name);
+    setValue(`ingredients.${index}.defaultGrams`, def.lastUsedGrams);
+    setValue(`ingredients.${index}.calories`, fromPer100g(def.caloriesPer100g, def.lastUsedGrams));
+    setValue(`ingredients.${index}.protein`, fromPer100g(def.proteinPer100g, def.lastUsedGrams));
+    setValue(`ingredients.${index}.fat`, fromPer100g(def.fatPer100g, def.lastUsedGrams));
+    setValue(`ingredients.${index}.carbs`, fromPer100g(def.carbsPer100g, def.lastUsedGrams));
+    // Macros above are already correct for lastUsedGrams — prevent the
+    // auto-scale effect from re-scaling them on the next render.
+    const nextGrams = watchedIngredients.map((ing, i) => (i === index ? def.lastUsedGrams : ing.defaultGrams));
+    prevGramsRef.current = JSON.stringify(nextGrams);
+  }
 
   function onSubmit(data: FormData) {
     const ingredientsForStorage = data.ingredients.map((ing) => ({
@@ -213,11 +228,13 @@ export default function MealForm({ open, onOpenChange, initial, onSave }: MealFo
                   <div className="flex gap-2 items-end">
                     <div className="flex-1 space-y-1">
                       <Label htmlFor={`ing-name-${index}`} className="text-xs">Name</Label>
-                      <Input
-                        id={`ing-name-${index}`}
-                        placeholder="e.g. Milk"
-                        className="h-8 text-xs"
-                        {...register(`ingredients.${index}.name`)}
+                      <input type="hidden" {...register(`ingredients.${index}.name`)} />
+                      <IngredientAutocomplete
+                        inputId={`ing-name-${index}`}
+                        value={watchedIngredients[index]?.name ?? ""}
+                        library={ingredientLibrary}
+                        onChange={(name) => setValue(`ingredients.${index}.name`, name)}
+                        onPick={(def) => pickIngredientDef(index, def)}
                       />
                       {errors.ingredients?.[index]?.name && (
                         <p className="text-xs text-destructive">{errors.ingredients[index].name?.message}</p>
