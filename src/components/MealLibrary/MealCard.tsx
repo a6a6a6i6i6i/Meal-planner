@@ -58,9 +58,9 @@ export default function MealCard({ meal, onEdit, onDuplicate, onDelete }: MealCa
       <div className="grid grid-cols-4 gap-2 text-center">
         {[
           { label: "kcal", value: Math.round(meal.calories) },
-          { label: "protein", value: `${meal.protein}g` },
-          { label: "fat", value: `${meal.fat}g` },
-          { label: "carbs", value: `${meal.carbs}g` },
+          { label: "protein", value: `${Math.round(meal.protein)}g` },
+          { label: "fat", value: `${Math.round(meal.fat)}g` },
+          { label: "carbs", value: `${Math.round(meal.carbs)}g` },
         ].map(({ label, value }) => (
           <div key={label} className="bg-muted rounded-md py-1.5 px-1">
             <div className="text-xs font-semibold text-foreground">{value}</div>

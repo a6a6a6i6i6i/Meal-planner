@@ -84,7 +84,7 @@ export default function MealPicker({ meals, selectedId, onSelect }: MealPickerPr
                   <div>
                     <div className="text-xs font-medium">{meal.name}</div>
                     <div className="text-[10px] text-muted-foreground">
-                      {meal.calories} kcal · {meal.protein}g P
+                      {Math.round(meal.calories)} kcal · {Math.round(meal.protein)}g P
                     </div>
                   </div>
                 </CommandItem>
