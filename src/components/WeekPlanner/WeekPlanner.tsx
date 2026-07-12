@@ -122,7 +122,6 @@ export default function WeekPlanner({
         key={weekKey}
         className={`
           flex overflow-x-auto snap-x snap-mandatory pb-6 gap-3 sm:gap-4
-          lg:grid lg:grid-cols-7
           [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
         `}
       >

@@ -35,7 +35,7 @@ const DayColumn = memo(function DayColumn({ date, dayPlan, goals, meals, colInde
   return (
     <div
       data-today={isToday}
-      className={`day-col-enter snap-start shrink-0 w-[calc(100vw-3rem)] sm:w-72 lg:w-auto lg:shrink flex flex-col gap-3 p-4 rounded-2xl border ${
+      className={`day-col-enter snap-start shrink-0 w-[calc(100vw-3rem)] sm:w-72 lg:w-80 flex flex-col gap-3 p-4 rounded-2xl border ${
         isToday
           ? `today-col-pulse border-brand-peach/60 border-t-[3px] border-t-brand-ochre bg-brand-peach/10`
           : "border-border bg-background"
