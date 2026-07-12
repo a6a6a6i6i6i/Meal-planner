@@ -6,9 +6,9 @@ export const SEED_MEALS: Meal[] = [
     name: "Scrambled eggs, smoked salmon & avocado",
     calories: 440, protein: 25, carbs: 10, fat: 34,
     ingredients: [
-      { ingredientId: "seed-scrambled-eggs-smoked-salmon-avocado-scrambled-eggs-2-large", name: "Scrambled eggs (2 large)", defaultGrams: 115, caloriesPer100g: 192, proteinPer100g: 11.6, carbsPer100g: 1.5, fatPer100g: 15.4 },
+      { ingredientId: "seed-scrambled-eggs-smoked-salmon-avocado-scrambled-eggs-2-large", name: "Scrambled egg", defaultGrams: 115, caloriesPer100g: 192, proteinPer100g: 11.6, carbsPer100g: 1.5, fatPer100g: 15.4 },
       { ingredientId: "seed-scrambled-eggs-smoked-salmon-avocado-smoked-salmon", name: "Smoked salmon", defaultGrams: 50, caloriesPer100g: 118, proteinPer100g: 18.0, carbsPer100g: 0.0, fatPer100g: 3.8 },
-      { ingredientId: "seed-scrambled-eggs-smoked-salmon-avocado-avocado-1-2", name: "Avocado (1/2)", defaultGrams: 100, caloriesPer100g: 160, proteinPer100g: 2.6, carbsPer100g: 8.1, fatPer100g: 14.7 },
+      { ingredientId: "seed-scrambled-eggs-smoked-salmon-avocado-avocado-1-2", name: "Avocado", defaultGrams: 100, caloriesPer100g: 160, proteinPer100g: 2.6, carbsPer100g: 8.1, fatPer100g: 14.7 },
     ],
   },
   {
@@ -47,7 +47,7 @@ export const SEED_MEALS: Meal[] = [
     calories: 193, protein: 7, carbs: 7, fat: 15,
     ingredients: [
       { ingredientId: "seed-greek-yogurt-almonds-greek-style-yoghurt-full-fat", name: "Greek style yoghurt (full fat)", defaultGrams: 100, caloriesPer100g: 123, proteinPer100g: 4.0, carbsPer100g: 5.0, fatPer100g: 9.0 },
-      { ingredientId: "seed-greek-yogurt-almonds-almonds-10", name: "Almonds (10)", defaultGrams: 12, caloriesPer100g: 584, proteinPer100g: 23.0, carbsPer100g: 18.4, fatPer100g: 50.6 },
+      { ingredientId: "seed-greek-yogurt-almonds-almonds-10", name: "Almonds", defaultGrams: 12, caloriesPer100g: 584, proteinPer100g: 23.0, carbsPer100g: 18.4, fatPer100g: 50.6 },
     ],
   },
   {
@@ -64,7 +64,7 @@ export const SEED_MEALS: Meal[] = [
     name: "Banana",
     calories: 104, protein: 1, carbs: 27, fat: 0,
     ingredients: [
-      { ingredientId: "seed-banana-banana-1-medium", name: "Banana (1 medium)", defaultGrams: 118, caloriesPer100g: 88, proteinPer100g: 0.8, carbsPer100g: 22.9, fatPer100g: 0.0 },
+      { ingredientId: "seed-banana-banana-1-medium", name: "Banana", defaultGrams: 118, caloriesPer100g: 88, proteinPer100g: 0.8, carbsPer100g: 22.9, fatPer100g: 0.0 },
     ],
   },
   {
@@ -152,7 +152,7 @@ export const SEED_MEALS: Meal[] = [
     name: "Eggs & mackerel",
     calories: 540, protein: 39, carbs: 2, fat: 42,
     ingredients: [
-      { ingredientId: "seed-eggs-mackerel-scrambled-eggs-2-large", name: "Scrambled eggs (2 large)", defaultGrams: 115, caloriesPer100g: 192, proteinPer100g: 11.6, carbsPer100g: 1.5, fatPer100g: 15.4 },
+      { ingredientId: "seed-eggs-mackerel-scrambled-eggs-2-large", name: "Scrambled egg", defaultGrams: 115, caloriesPer100g: 192, proteinPer100g: 11.6, carbsPer100g: 1.5, fatPer100g: 15.4 },
       { ingredientId: "seed-eggs-mackerel-mackerel-fillets", name: "Mackerel fillets", defaultGrams: 120, caloriesPer100g: 266, proteinPer100g: 21.4, carbsPer100g: 0.0, fatPer100g: 20.5 },
     ],
   },

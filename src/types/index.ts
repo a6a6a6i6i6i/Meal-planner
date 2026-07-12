@@ -8,6 +8,16 @@ export interface Ingredient {
   fatPer100g: number;
 }
 
+export interface IngredientDef {
+  id: string;
+  name: string;
+  caloriesPer100g: number;
+  proteinPer100g: number;
+  carbsPer100g: number;
+  fatPer100g: number;
+  lastUsedGrams: number;
+}
+
 export interface IngredientOverride {
   ingredientId: string;
   grams: number;
