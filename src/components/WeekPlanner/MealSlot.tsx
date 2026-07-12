@@ -1,7 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { X, SlidersHorizontal } from "lucide-react";
+import { X, SlidersHorizontal, MoreVertical, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import MealPicker from "./MealPicker";
 import IngredientAdjustDialog from "./IngredientAdjustDialog";
 import { computeEntryMacros } from "@/lib/planner";
@@ -116,20 +122,36 @@ function MealEntryRow({ entry, meals, skipInitialGlow, onRemove, onChange }: Mea
     <div className={`slot-content-in space-y-1.5 ${justFilled ? "slot-fill-glow" : ""}`}>
       <div className="flex items-center gap-1">
         <span className="text-xs font-semibold truncate flex-1 leading-snug">{meal.name}</span>
-        <Tooltip>
-          <TooltipTrigger asChild>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               size="icon"
               className="h-7 w-7 shrink-0 text-muted-foreground active:scale-90 transition-transform duration-100"
-              onClick={onRemove}
-              aria-label="Remove meal"
+              aria-label="Meal entry options"
             >
-              <X className="h-3 w-3" />
+              <MoreVertical className="h-3.5 w-3.5" />
             </Button>
-          </TooltipTrigger>
-          <TooltipContent>Remove</TooltipContent>
-        </Tooltip>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {hasIngredients && (
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setTimeout(() => setAdjustOpen(true), 0);
+                }}
+              >
+                <SlidersHorizontal className="h-3.5 w-3.5 mr-2" />
+                Adjust portions
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={onRemove} className="text-destructive focus:text-destructive">
+              <Trash2 className="h-3.5 w-3.5 mr-2" />
+              Remove
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {hasIngredients ? (
@@ -141,16 +163,6 @@ function MealEntryRow({ entry, meals, skipInitialGlow, onRemove, onChange }: Mea
               return `${ing.name} ${g}g`;
             }).join(" · ")}
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="h-8 w-full text-[10px] px-2 gap-1 active:scale-95 transition-transform duration-100"
-            onClick={() => setAdjustOpen(true)}
-          >
-            <SlidersHorizontal className="h-3 w-3" />
-            Adjust portions
-          </Button>
           <IngredientAdjustDialog
             open={adjustOpen}
             onOpenChange={setAdjustOpen}
