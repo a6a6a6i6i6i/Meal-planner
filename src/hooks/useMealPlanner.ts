@@ -11,7 +11,7 @@ import type { Meal, MealEntry, WeekGoals, WeekPlan, SlotKey } from "@/types";
 import { DEFAULT_GOALS } from "@/types";
 
 function buildEmptyDayPlan() {
-  return { breakfast: null, lunch: null, dinner: null };
+  return { breakfast: null, lunch: null, snack: null, dinner: null };
 }
 
 function buildDefaultWeekPlan(weekKey: string): WeekPlan {

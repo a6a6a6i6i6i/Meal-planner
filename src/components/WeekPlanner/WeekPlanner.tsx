@@ -35,7 +35,7 @@ export default function WeekPlanner({
     () => localStorage.getItem(NUDGE_KEY) === "1"
   );
 
-  const emptyDay = { breakfast: null, lunch: null, dinner: null };
+  const emptyDay = { breakfast: null, lunch: null, snack: null, dinner: null };
 
   const isWeekEmpty = dates.every((date) => {
     const day = weekPlan.days[formatDayKey(date)];

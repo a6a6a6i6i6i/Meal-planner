@@ -10,6 +10,7 @@ import type { Meal, MealEntry, SlotKey, IngredientOverride } from "@/types";
 const SLOT_LABELS: Record<SlotKey, string> = {
   breakfast: "Breakfast",
   lunch: "Lunch",
+  snack: "Snack",
   dinner: "Dinner",
 };
 

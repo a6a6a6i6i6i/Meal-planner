@@ -42,6 +42,7 @@ export interface MealEntry {
 export interface DayPlan {
   breakfast: MealEntry | null;
   lunch: MealEntry | null;
+  snack: MealEntry | null;
   dinner: MealEntry | null;
 }
 
@@ -76,6 +77,6 @@ export interface SwapSuggestion {
   servings: number;
 }
 
-export type SlotKey = 'breakfast' | 'lunch' | 'dinner';
-export const SLOT_KEYS: SlotKey[] = ['breakfast', 'lunch', 'dinner'];
+export type SlotKey = 'breakfast' | 'lunch' | 'snack' | 'dinner';
+export const SLOT_KEYS: SlotKey[] = ['breakfast', 'lunch', 'snack', 'dinner'];
 export const DEFAULT_GOALS: WeekGoals = { calories: 2000, protein: 150, carbs: 200, fat: 65 };
