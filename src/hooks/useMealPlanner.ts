@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocalStorage } from "./useLocalStorage";
-import { SEED_MEALS } from "@/lib/seedMeals";
 import {
   getISOWeekKey,
   getWeekDates,
@@ -38,22 +37,6 @@ function buildDefaultWeekPlan(weekKey: string): WeekPlan {
 
 export function useMealPlanner() {
   const [meals, setMeals] = useLocalStorage<Meal[]>("meal-planner:meals", []);
-  const [seeded, setSeeded] = useLocalStorage<boolean>(
-    "meal-planner:seeded-v1",
-    false
-  );
-
-  // One-time import of meals derived from MacroFactor logs.
-  // Merges by id so user-created meals are never touched or duplicated.
-  useEffect(() => {
-    if (seeded) return;
-    setMeals((prev) => {
-      const existing = new Set(prev.map((m) => m.id));
-      return [...prev, ...SEED_MEALS.filter((m) => !existing.has(m.id))];
-    });
-    setSeeded(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [seeded]);
   const [weekKey, setWeekKey] = useState<string>(getISOWeekKey(new Date()));
   const [weekPlan, setWeekPlan] = useLocalStorage<WeekPlan>(
     `meal-planner:week:${weekKey}`,
@@ -71,6 +54,13 @@ export function useMealPlanner() {
 
   function deleteMeal(id: string) {
     setMeals((prev) => prev.filter((m) => m.id !== id));
+  }
+
+  function duplicateMeal(id: string) {
+    const source = meals.find((m) => m.id === id);
+    if (!source) return;
+    const copy: Meal = { ...source, id: crypto.randomUUID(), name: `${source.name} (copy)` };
+    setMeals((prev) => [...prev, copy]);
   }
 
   function goToPrevWeek() {
@@ -112,6 +102,7 @@ export function useMealPlanner() {
     addMeal,
     updateMeal,
     deleteMeal,
+    duplicateMeal,
     goToPrevWeek,
     goToNextWeek,
     updateDaySlot,
