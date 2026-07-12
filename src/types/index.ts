@@ -40,10 +40,10 @@ export interface MealEntry {
 }
 
 export interface DayPlan {
-  breakfast: MealEntry | null;
-  lunch: MealEntry | null;
-  snack: MealEntry | null;
-  dinner: MealEntry | null;
+  breakfast: MealEntry[];
+  lunch: MealEntry[];
+  snack: MealEntry[];
+  dinner: MealEntry[];
 }
 
 export interface WeekGoals {
@@ -68,6 +68,7 @@ export interface MacroTotals {
 
 export interface SwapSuggestion {
   slot: SlotKey;
+  index: number;
   replaceMealId: string;
   suggestMealId: string;
   scoreBefore: number;

@@ -28,15 +28,15 @@ export function computeEntryMacros(meal: Meal, entry: MealEntry): MacroTotals {
 export function calculateDayTotals(dayPlan: DayPlan, meals: Meal[]): MacroTotals {
   const totals: MacroTotals = { calories: 0, protein: 0, carbs: 0, fat: 0 };
   for (const slot of SLOT_KEYS) {
-    const entry = dayPlan[slot];
-    if (!entry) continue;
-    const meal = meals.find((m) => m.id === entry.mealId);
-    if (!meal) continue;
-    const m = computeEntryMacros(meal, entry);
-    totals.calories += m.calories;
-    totals.protein += m.protein;
-    totals.carbs += m.carbs;
-    totals.fat += m.fat;
+    for (const entry of dayPlan[slot] ?? []) {
+      const meal = meals.find((m) => m.id === entry.mealId);
+      if (!meal) continue;
+      const m = computeEntryMacros(meal, entry);
+      totals.calories += m.calories;
+      totals.protein += m.protein;
+      totals.carbs += m.carbs;
+      totals.fat += m.fat;
+    }
   }
   return totals;
 }
@@ -64,40 +64,47 @@ export function findBestSwap(
   let bestSwap: SwapSuggestion | null = null;
 
   for (const slot of SLOT_KEYS) {
-    const entry = dayPlan[slot];
-    if (!entry) continue;
-    const currentMeal = meals.find((m) => m.id === entry.mealId);
-    if (!currentMeal) continue;
+    const entries = dayPlan[slot] ?? [];
+    for (let index = 0; index < entries.length; index++) {
+      const entry = entries[index];
+      const currentMeal = meals.find((m) => m.id === entry.mealId);
+      if (!currentMeal) continue;
 
-    const otherUsed = new Set(
-      SLOT_KEYS.filter((s) => s !== slot)
-        .map((s) => dayPlan[s]?.mealId)
-        .filter(Boolean)
-    );
+      const otherUsed = new Set<string>();
+      for (const s of SLOT_KEYS) {
+        const arr = dayPlan[s] ?? [];
+        for (let i = 0; i < arr.length; i++) {
+          if (s === slot && i === index) continue;
+          otherUsed.add(arr[i].mealId);
+        }
+      }
 
-    for (const candidate of meals) {
-      if (candidate.id === entry.mealId) continue;
-      if (otherUsed.has(candidate.id)) continue;
+      for (const candidate of meals) {
+        if (candidate.id === entry.mealId) continue;
+        if (otherUsed.has(candidate.id)) continue;
 
-      const candidateEntry: MealEntry = { mealId: candidate.id, servings: 1 };
-      const hypothetical: DayPlan = { ...dayPlan, [slot]: candidateEntry };
-      const hypotheticalTotals = calculateDayTotals(hypothetical, meals);
-      const score = deviationScore(hypotheticalTotals, goals);
+        const candidateEntry: MealEntry = { mealId: candidate.id, servings: 1 };
+        const hypotheticalEntries = entries.map((e, i) => (i === index ? candidateEntry : e));
+        const hypothetical: DayPlan = { ...dayPlan, [slot]: hypotheticalEntries };
+        const hypotheticalTotals = calculateDayTotals(hypothetical, meals);
+        const score = deviationScore(hypotheticalTotals, goals);
 
-      if (score < bestScore) {
-        bestScore = score;
-        const currentMacros = computeEntryMacros(currentMeal, entry);
-        const candidateMacros = computeEntryMacros(candidate, candidateEntry);
-        bestSwap = {
-          slot,
-          replaceMealId: entry.mealId,
-          suggestMealId: candidate.id,
-          scoreBefore: baseline,
-          scoreAfter: score,
-          calDelta: candidateMacros.calories - currentMacros.calories,
-          proteinDelta: candidateMacros.protein - currentMacros.protein,
-          servings: entry.servings,
-        };
+        if (score < bestScore) {
+          bestScore = score;
+          const currentMacros = computeEntryMacros(currentMeal, entry);
+          const candidateMacros = computeEntryMacros(candidate, candidateEntry);
+          bestSwap = {
+            slot,
+            index,
+            replaceMealId: entry.mealId,
+            suggestMealId: candidate.id,
+            scoreBefore: baseline,
+            scoreAfter: score,
+            calDelta: candidateMacros.calories - currentMacros.calories,
+            proteinDelta: candidateMacros.protein - currentMacros.protein,
+            servings: entry.servings,
+          };
+        }
       }
     }
   }

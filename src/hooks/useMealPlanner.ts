@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 import {
   getISOWeekKey,
@@ -7,11 +7,33 @@ import {
   getPrevWeekKey,
   getNextWeekKey,
 } from "@/lib/weekKeys";
-import type { Meal, MealEntry, WeekGoals, WeekPlan, SlotKey } from "@/types";
-import { DEFAULT_GOALS } from "@/types";
+import type { Meal, MealEntry, WeekGoals, WeekPlan, DayPlan, SlotKey } from "@/types";
+import { DEFAULT_GOALS, SLOT_KEYS } from "@/types";
 
-function buildEmptyDayPlan() {
-  return { breakfast: null, lunch: null, snack: null, dinner: null };
+function buildEmptyDayPlan(): DayPlan {
+  return { breakfast: [], lunch: [], snack: [], dinner: [] };
+}
+
+// Older saved data stored one MealEntry (or null) per slot instead of an
+// array. Normalize on read so every slot is always MealEntry[].
+function normalizeDayPlan(day: unknown): DayPlan {
+  const raw = (day ?? {}) as Record<string, unknown>;
+  const normalized = {} as DayPlan;
+  for (const slot of SLOT_KEYS) {
+    const v = raw[slot];
+    if (Array.isArray(v)) normalized[slot] = v as MealEntry[];
+    else if (v && typeof v === "object") normalized[slot] = [v as MealEntry];
+    else normalized[slot] = [];
+  }
+  return normalized;
+}
+
+function normalizeWeekPlan(wp: WeekPlan): WeekPlan {
+  const days: Record<string, DayPlan> = {};
+  for (const [key, day] of Object.entries(wp.days)) {
+    days[key] = normalizeDayPlan(day);
+  }
+  return { ...wp, days };
 }
 
 function buildDefaultWeekPlan(weekKey: string): WeekPlan {
@@ -38,10 +60,11 @@ function buildDefaultWeekPlan(weekKey: string): WeekPlan {
 export function useMealPlanner() {
   const [meals, setMeals] = useLocalStorage<Meal[]>("meal-planner:meals", []);
   const [weekKey, setWeekKey] = useState<string>(getISOWeekKey(new Date()));
-  const [weekPlan, setWeekPlan] = useLocalStorage<WeekPlan>(
+  const [rawWeekPlan, setWeekPlan] = useLocalStorage<WeekPlan>(
     `meal-planner:week:${weekKey}`,
     buildDefaultWeekPlan(weekKey)
   );
+  const weekPlan = useMemo(() => normalizeWeekPlan(rawWeekPlan), [rawWeekPlan]);
 
   function addMeal(data: Omit<Meal, "id">) {
     const meal: Meal = { ...data, id: crypto.randomUUID() };
@@ -71,24 +94,26 @@ export function useMealPlanner() {
     setWeekKey((k) => getNextWeekKey(k));
   }
 
-  function ensureDayExists(dayKey: string) {
-    if (!weekPlan.days[dayKey]) {
-      setWeekPlan((prev) => ({
+  function updateDaySlot(dayKey: string, slot: SlotKey, index: number, entry: MealEntry | null) {
+    setWeekPlan((prev) => {
+      const day = normalizeDayPlan(prev.days[dayKey]);
+      const current = day[slot];
+      let next: MealEntry[];
+      if (entry === null) {
+        next = current.filter((_, i) => i !== index);
+      } else if (index >= current.length) {
+        next = [...current, entry];
+      } else {
+        next = current.map((e, i) => (i === index ? entry : e));
+      }
+      return {
         ...prev,
-        days: { ...prev.days, [dayKey]: buildEmptyDayPlan() },
-      }));
-    }
-  }
-
-  function updateDaySlot(dayKey: string, slot: SlotKey, entry: MealEntry | null) {
-    ensureDayExists(dayKey);
-    setWeekPlan((prev) => ({
-      ...prev,
-      days: {
-        ...prev.days,
-        [dayKey]: { ...prev.days[dayKey], [slot]: entry },
-      },
-    }));
+        days: {
+          ...prev.days,
+          [dayKey]: { ...day, [slot]: next },
+        },
+      };
+    });
   }
 
   function updateGoals(goals: WeekGoals) {

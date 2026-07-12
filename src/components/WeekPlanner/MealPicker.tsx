@@ -21,10 +21,11 @@ import type { Meal } from "@/types";
 interface MealPickerProps {
   meals: Meal[];
   selectedId: string | null;
+  placeholder?: string;
   onSelect: (mealId: string) => void;
 }
 
-export default function MealPicker({ meals, selectedId, onSelect }: MealPickerProps) {
+export default function MealPicker({ meals, selectedId, placeholder = "Pick a meal…", onSelect }: MealPickerProps) {
   const [open, setOpen] = useState(false);
   const selected = meals.find((m) => m.id === selectedId);
 
@@ -41,7 +42,7 @@ export default function MealPicker({ meals, selectedId, onSelect }: MealPickerPr
           )}
         >
           <span className="truncate">
-            {selected ? selected.name : "Pick a meal…"}
+            {selected ? selected.name : placeholder}
           </span>
           <ChevronsUpDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />
         </Button>

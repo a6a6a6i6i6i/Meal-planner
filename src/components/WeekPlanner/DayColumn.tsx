@@ -13,7 +13,7 @@ interface DayColumnProps {
   goals: WeekGoals;
   meals: Meal[];
   colIndex: number;
-  onUpdateSlot: (slot: SlotKey, entry: MealEntry | null) => void;
+  onUpdateSlot: (slot: SlotKey, index: number, entry: MealEntry | null) => void;
 }
 
 const DayColumn = memo(function DayColumn({ date, dayPlan, goals, meals, colIndex, onUpdateSlot }: DayColumnProps) {
@@ -25,9 +25,9 @@ const DayColumn = memo(function DayColumn({ date, dayPlan, goals, meals, colInde
 
   function handleSwapAccept() {
     if (!swap) return;
-    const currentEntry = dayPlan[swap.slot];
+    const currentEntry = dayPlan[swap.slot]?.[swap.index];
     if (!currentEntry) return;
-    onUpdateSlot(swap.slot, { mealId: swap.suggestMealId, servings: swap.servings });
+    onUpdateSlot(swap.slot, swap.index, { mealId: swap.suggestMealId, servings: swap.servings });
     setSwapFlashed(true);
     setTimeout(() => setSwapFlashed(false), 600);
   }
@@ -60,10 +60,11 @@ const DayColumn = memo(function DayColumn({ date, dayPlan, goals, meals, colInde
           <MealSlot
             key={slot}
             slot={slot}
-            entry={dayPlan[slot]}
+            entries={dayPlan[slot] ?? []}
             meals={meals}
             colIndex={colIndex}
-            onUpdate={(entry) => onUpdateSlot(slot, entry)}
+            onAdd={(entry) => onUpdateSlot(slot, (dayPlan[slot] ?? []).length, entry)}
+            onUpdateEntry={(index, entry) => onUpdateSlot(slot, index, entry)}
           />
         ))}
       </div>

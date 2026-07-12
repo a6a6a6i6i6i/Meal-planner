@@ -16,7 +16,7 @@ interface WeekPlannerProps {
   meals: Meal[];
   onPrevWeek: () => void;
   onNextWeek: () => void;
-  onUpdateDaySlot: (dayKey: string, slot: SlotKey, entry: MealEntry | null) => void;
+  onUpdateDaySlot: (dayKey: string, slot: SlotKey, index: number, entry: MealEntry | null) => void;
   onUpdateGoals: (goals: WeekGoals) => void;
 }
 
@@ -35,11 +35,11 @@ export default function WeekPlanner({
     () => localStorage.getItem(NUDGE_KEY) === "1"
   );
 
-  const emptyDay = { breakfast: null, lunch: null, snack: null, dinner: null };
+  const emptyDay = { breakfast: [], lunch: [], snack: [], dinner: [] };
 
   const isWeekEmpty = dates.every((date) => {
     const day = weekPlan.days[formatDayKey(date)];
-    return !day || SLOT_KEYS.every((slot) => day[slot] === null);
+    return !day || SLOT_KEYS.every((slot) => (day[slot]?.length ?? 0) === 0);
   });
 
   // Scroll today's column into view on mobile when week changes
@@ -136,7 +136,7 @@ export default function WeekPlanner({
               goals={weekPlan.goals}
               meals={meals}
               colIndex={i}
-              onUpdateSlot={(slot, entry) => onUpdateDaySlot(dayKey, slot, entry)}
+              onUpdateSlot={(slot, index, entry) => onUpdateDaySlot(dayKey, slot, index, entry)}
             />
           );
         })}
